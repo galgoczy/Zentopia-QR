@@ -226,6 +226,11 @@ const state = {
   copied: false
 };
 
+let renderTimeoutId = null;
+let lastRenderSignature = '';
+let pendingRenderSignature = '';
+let pendingRenderData = '';
+
 const elements = {
   tabButtons: Array.from(document.querySelectorAll('.tab-button')),
   formTitle: document.getElementById('form-title'),
@@ -341,6 +346,56 @@ function updateTabButtons() {
     button.classList.toggle('active', tab === state.activeTab);
     button.setAttribute('aria-selected', tab === state.activeTab ? 'true' : 'false');
   });
+}
+
+function buildRenderSignature(data) {
+  const customization = state.customization;
+  const logoSignature = customization.centerLogo
+    ? `${customization.centerLogo.length}-${customization.centerLogo.slice(-16)}`
+    : 'no-logo';
+  return [
+    data,
+    customization.codeColor,
+    customization.backgroundColor,
+    customization.cornerSquareColor,
+    customization.borderColor,
+    customization.cornerStyle,
+    customization.moduleStyle,
+    customization.logoSize,
+    customization.showCaption ? '1' : '0',
+    customization.caption,
+    customization.captionSize,
+    customization.captionBold ? '1' : '0',
+    logoSignature
+  ].join('|');
+}
+
+function scheduleRender() {
+  if (renderTimeoutId) {
+    clearTimeout(renderTimeoutId);
+  }
+  renderTimeoutId = window.setTimeout(() => {
+    renderTimeoutId = null;
+    if (!pendingRenderSignature) {
+      return;
+    }
+    if (pendingRenderSignature === lastRenderSignature) {
+      pendingRenderSignature = '';
+      pendingRenderData = '';
+      return;
+    }
+    if (!pendingRenderData) {
+      clearQRCode();
+      lastRenderSignature = '';
+      pendingRenderSignature = '';
+      pendingRenderData = '';
+      return;
+    }
+    renderQRCode(pendingRenderData);
+    lastRenderSignature = pendingRenderSignature;
+    pendingRenderSignature = '';
+    pendingRenderData = '';
+  }, 75);
 }
 
 function computeQrData() {
@@ -525,12 +580,33 @@ function renderQRCode(data) {
 }
 
 function updateStateAndRender() {
-  state.qrData = computeQrData();
-  if (state.qrData) {
-    renderQRCode(state.qrData);
-  } else {
-    clearQRCode();
+  const nextData = computeQrData();
+  const nextSignature = nextData ? buildRenderSignature(nextData) : '';
+  const hadData = Boolean(state.qrData);
+
+  state.qrData = nextData;
+
+  if (!nextData) {
+    pendingRenderData = '';
+    pendingRenderSignature = '';
+    if (renderTimeoutId) {
+      clearTimeout(renderTimeoutId);
+      renderTimeoutId = null;
+    }
+    if (lastRenderSignature || hadData) {
+      clearQRCode();
+    }
+    lastRenderSignature = '';
+    return;
   }
+
+  if (nextSignature === lastRenderSignature && !pendingRenderSignature) {
+    return;
+  }
+
+  pendingRenderData = nextData;
+  pendingRenderSignature = nextSignature;
+  scheduleRender();
 }
 
 function resetState() {
@@ -565,6 +641,13 @@ function resetState() {
     captionBold: false
   };
   state.qrData = '';
+  pendingRenderData = '';
+  pendingRenderSignature = '';
+  lastRenderSignature = '';
+  if (renderTimeoutId) {
+    clearTimeout(renderTimeoutId);
+    renderTimeoutId = null;
+  }
 
   elements.urlInput.value = '';
   elements.textInput.value = '';
