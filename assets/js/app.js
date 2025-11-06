@@ -1,4 +1,4 @@
-import { createQRCode, QRErrorCorrectionLevel } from './qrcode.js';
+import { generateQRCodeMatrix, QRErrorCorrectionLevel } from './qrcode.js';
 
 const TRANSLATIONS = {
   'en-US': {
@@ -230,6 +230,13 @@ let renderTimeoutId = null;
 let lastRenderSignature = '';
 let pendingRenderSignature = '';
 let pendingRenderData = '';
+let inFlightRenderSignature = '';
+
+const workerSupported = typeof Worker !== 'undefined';
+let qrWorker = null;
+let nextWorkerJobId = 0;
+let expectedWorkerJobId = 0;
+const workerJobs = new Map();
 
 const elements = {
   tabButtons: Array.from(document.querySelectorAll('.tab-button')),
@@ -370,6 +377,63 @@ function buildRenderSignature(data) {
   ].join('|');
 }
 
+function initializeWorker() {
+  if (!workerSupported || qrWorker) {
+    return;
+  }
+  try {
+    qrWorker = new Worker(new URL('./qrWorker.js', import.meta.url), { type: 'module' });
+    qrWorker.addEventListener('message', handleWorkerMessage);
+    qrWorker.addEventListener('error', handleWorkerError);
+  } catch (error) {
+    console.warn('Unable to initialize QR worker, falling back to main-thread rendering.', error);
+    qrWorker = null;
+  }
+}
+
+function handleWorkerError(event) {
+  console.warn('QR worker error, disabling worker rendering.', event?.message || event);
+  const pendingJob = workerJobs.get(expectedWorkerJobId);
+  teardownWorker();
+  if (pendingJob) {
+    runSynchronousRender(pendingJob.data, pendingJob.signature);
+  }
+}
+
+function teardownWorker() {
+  if (qrWorker) {
+    qrWorker.terminate();
+    qrWorker = null;
+  }
+  workerJobs.clear();
+  expectedWorkerJobId = 0;
+}
+
+function handleWorkerMessage(event) {
+  const payload = event.data || {};
+  const { id, success, moduleCount, modules, error } = payload;
+  if (!workerJobs.has(id)) {
+    return;
+  }
+  const job = workerJobs.get(id);
+  workerJobs.delete(id);
+
+  if (id !== expectedWorkerJobId) {
+    return;
+  }
+
+  if (!success || !modules || !moduleCount) {
+    console.warn('QR worker failed, falling back to main-thread rendering.', error);
+    teardownWorker();
+    runSynchronousRender(job.data, job.signature);
+    return;
+  }
+
+  const matrix = modules instanceof Uint8Array ? modules : new Uint8Array(modules);
+  deliverRenderResult(job.data, job.signature, matrix, moduleCount);
+  expectedWorkerJobId = 0;
+}
+
 function scheduleRender() {
   if (renderTimeoutId) {
     clearTimeout(renderTimeoutId);
@@ -384,18 +448,21 @@ function scheduleRender() {
       pendingRenderData = '';
       return;
     }
-    if (!pendingRenderData) {
-      clearQRCode();
-      lastRenderSignature = '';
-      pendingRenderSignature = '';
-      pendingRenderData = '';
-      return;
-    }
-    renderQRCode(pendingRenderData);
-    lastRenderSignature = pendingRenderSignature;
+
+    const data = pendingRenderData;
+    const signature = pendingRenderSignature;
     pendingRenderSignature = '';
     pendingRenderData = '';
-  }, 75);
+
+    if (!data) {
+      clearQRCode();
+      lastRenderSignature = '';
+      inFlightRenderSignature = '';
+      return;
+    }
+
+    startRender(data, signature);
+  }, 120);
 }
 
 function computeQrData() {
@@ -425,57 +492,76 @@ function clearQRCode() {
   elements.qrContent.classList.add('hidden');
   elements.actions.classList.add('hidden');
   elements.qrDataBlock.classList.add('hidden');
+  inFlightRenderSignature = '';
 }
 
-function applyRoundedModules(ctx, qr, canvasSize, cellSize, margin, cornerColor, codeColor, moduleStyle) {
-  if (moduleStyle !== 'round') {
-    return;
-  }
-  const moduleCount = qr.moduleCount;
-  const radius = cellSize * 0.45;
-  ctx.fillStyle = codeColor;
-  ctx.clearRect(0, 0, canvasSize, canvasSize);
-  ctx.fillStyle = state.customization.backgroundColor;
-  ctx.fillRect(0, 0, canvasSize, canvasSize);
+function moduleIsDark(modules, moduleCount, row, col) {
+  return modules[row * moduleCount + col] === 1;
+}
 
+function drawRoundedModules(ctx, modules, moduleCount, cellSize, margin, cornerColor, codeColor, backgroundColor) {
+  const radius = cellSize * 0.45;
   const corners = [
     { row: 0, col: 0 },
     { row: 0, col: moduleCount - 7 },
     { row: moduleCount - 7, col: 0 }
   ];
 
-  const isInCorner = (row, col) => {
-    return corners.some(corner => row >= corner.row && row < corner.row + 7 && col >= corner.col && col < corner.col + 7);
-  };
+  const isInCorner = (row, col) =>
+    corners.some(corner =>
+      row >= corner.row &&
+      row < corner.row + 7 &&
+      col >= corner.col &&
+      col < corner.col + 7
+    );
 
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  ctx.fillStyle = cornerColor;
+  corners.forEach(corner => {
+    for (let row = corner.row; row < corner.row + 7; row++) {
+      for (let col = corner.col; col < corner.col + 7; col++) {
+        if (!moduleIsDark(modules, moduleCount, row, col)) continue;
+        const x = margin + col * cellSize;
+        const y = margin + row * cellSize;
+        ctx.fillRect(x, y, cellSize, cellSize);
+      }
+    }
+  });
+
+  ctx.fillStyle = codeColor;
   for (let row = 0; row < moduleCount; row++) {
     for (let col = 0; col < moduleCount; col++) {
-      if (!qr.isDark(row, col)) continue;
+      if (!moduleIsDark(modules, moduleCount, row, col)) continue;
+      if (isInCorner(row, col)) continue;
       const x = margin + col * cellSize + cellSize / 2;
       const y = margin + row * cellSize + cellSize / 2;
       ctx.beginPath();
-      ctx.fillStyle = isInCorner(row, col) ? cornerColor : codeColor;
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 }
 
-function drawSquareModules(ctx, qr, cellSize, margin, cornerColor, codeColor) {
-  const moduleCount = qr.moduleCount;
+function drawSquareModules(ctx, modules, moduleCount, cellSize, margin, cornerColor, codeColor) {
   const corners = [
     { row: 0, col: 0 },
     { row: 0, col: moduleCount - 7 },
     { row: moduleCount - 7, col: 0 }
   ];
 
-  const isInCorner = (row, col) => {
-    return corners.some(corner => row >= corner.row && row < corner.row + 7 && col >= corner.col && col < corner.col + 7);
-  };
+  const isInCorner = (row, col) =>
+    corners.some(corner =>
+      row >= corner.row &&
+      row < corner.row + 7 &&
+      col >= corner.col &&
+      col < corner.col + 7
+    );
 
   for (let row = 0; row < moduleCount; row++) {
     for (let col = 0; col < moduleCount; col++) {
-      if (!qr.isDark(row, col)) continue;
+      if (!moduleIsDark(modules, moduleCount, row, col)) continue;
       const x = margin + col * cellSize;
       const y = margin + row * cellSize;
       ctx.fillStyle = isInCorner(row, col) ? cornerColor : codeColor;
@@ -484,99 +570,156 @@ function drawSquareModules(ctx, qr, cellSize, margin, cornerColor, codeColor) {
   }
 }
 
-function renderQRCode(data) {
-  if (!data) {
-    clearQRCode();
+function startRender(data, signature) {
+  inFlightRenderSignature = signature;
+  if (qrWorker) {
+    const jobId = ++nextWorkerJobId;
+    workerJobs.clear();
+    workerJobs.set(jobId, { data, signature });
+    expectedWorkerJobId = jobId;
+    try {
+      qrWorker.postMessage({ id: jobId, data });
+      return;
+    } catch (error) {
+      console.warn('Unable to communicate with QR worker, falling back to main-thread rendering.', error);
+      workerJobs.delete(jobId);
+    }
+  }
+  runSynchronousRender(data, signature);
+}
+
+function runSynchronousRender(data, signature) {
+  try {
+    const { moduleCount, modules } = generateQRCodeMatrix(data, {
+      errorCorrectionLevel: QRErrorCorrectionLevel.M
+    });
+    deliverRenderResult(data, signature, modules, moduleCount);
+  } catch (error) {
+    console.error('Failed to generate QR code', error);
+  }
+}
+
+async function deliverRenderResult(data, signature, modules, moduleCount) {
+  if (signature !== inFlightRenderSignature) {
     return;
   }
+  try {
+    const canvas = await paintQRCodeToCanvas(modules, moduleCount, state.customization);
+    if (signature !== inFlightRenderSignature) {
+      return;
+    }
+    updateQrDisplay(canvas, data);
+    lastRenderSignature = signature;
+  } catch (error) {
+    console.error('Failed to render QR code', error);
+  }
+}
 
-  const { customization } = state;
+function paintQRCodeToCanvas(modules, moduleCount, customization) {
   const size = 300;
-  const { canvas, qr } = createQRCode(data, {
-    size,
-    errorCorrectionLevel: QRErrorCorrectionLevel.M,
-    color: customization.codeColor,
-    background: customization.backgroundColor
-  });
-
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
   const ctx = canvas.getContext('2d');
-  const moduleCount = qr.moduleCount;
-  const cellSize = Math.floor(size / moduleCount);
-  const margin = Math.floor((size - cellSize * moduleCount) / 2);
-
   ctx.fillStyle = customization.backgroundColor;
   ctx.fillRect(0, 0, size, size);
 
+  const cellSize = Math.floor(size / moduleCount);
+  const margin = Math.floor((size - cellSize * moduleCount) / 2);
+
   if (customization.moduleStyle === 'round') {
-    applyRoundedModules(ctx, qr, size, cellSize, margin, customization.cornerSquareColor, customization.codeColor, customization.moduleStyle);
+    drawRoundedModules(
+      ctx,
+      modules,
+      moduleCount,
+      cellSize,
+      margin,
+      customization.cornerSquareColor,
+      customization.codeColor,
+      customization.backgroundColor
+    );
   } else {
-    drawSquareModules(ctx, qr, cellSize, margin, customization.cornerSquareColor, customization.codeColor);
+    drawSquareModules(
+      ctx,
+      modules,
+      moduleCount,
+      cellSize,
+      margin,
+      customization.cornerSquareColor,
+      customization.codeColor
+    );
   }
 
-  if (customization.centerLogo) {
+  if (!customization.centerLogo) {
+    return Promise.resolve(canvas);
+  }
+
+  return new Promise(resolve => {
     const logoImg = new Image();
     const logoPixelSize = customization.logoSize === 'small' ? 55 : 79;
     const padding = 3;
     logoImg.onload = () => {
-      const drawCtx = canvas.getContext('2d');
       const x = (size - logoPixelSize) / 2;
       const y = (size - logoPixelSize) / 2;
-      drawCtx.fillStyle = customization.backgroundColor;
-      drawCtx.fillRect(x - padding, y - padding, logoPixelSize + padding * 2, logoPixelSize + padding * 2);
-      drawCtx.drawImage(logoImg, x, y, logoPixelSize, logoPixelSize);
-      updateContainer(canvas);
+      ctx.fillStyle = customization.backgroundColor;
+      ctx.fillRect(
+        x - padding,
+        y - padding,
+        logoPixelSize + padding * 2,
+        logoPixelSize + padding * 2
+      );
+      ctx.drawImage(logoImg, x, y, logoPixelSize, logoPixelSize);
+      resolve(canvas);
     };
     logoImg.onerror = () => {
       console.warn('Failed to load center logo');
-      updateContainer(canvas);
+      resolve(canvas);
     };
     logoImg.src = customization.centerLogo;
-  } else {
-    updateContainer(canvas);
-  }
+  });
+}
 
-  function updateContainer(renderCanvas) {
-    elements.qrContainer.innerHTML = '';
-    const wrapper = document.createElement('div');
-    wrapper.className = customization.cornerStyle === 'rounded' ? 'inline-block bg-white shadow-lg rounded-2xl' : 'inline-block bg-white shadow-lg';
-    wrapper.style.border = `6px solid ${customization.borderColor}`;
-    wrapper.style.padding = '12px';
-    wrapper.style.backgroundColor = '#ffffff';
+function updateQrDisplay(canvas, data) {
+  const { customization } = state;
+  elements.qrContainer.innerHTML = '';
+  const wrapper = document.createElement('div');
+  wrapper.className =
+    customization.cornerStyle === 'rounded'
+      ? 'inline-block bg-white shadow-lg rounded-2xl'
+      : 'inline-block bg-white shadow-lg';
+  wrapper.style.border = `6px solid ${customization.borderColor}`;
+  wrapper.style.padding = '12px';
+  wrapper.style.backgroundColor = '#ffffff';
 
-    if (customization.cornerStyle === 'rounded') {
-      renderCanvas.style.borderRadius = '12px';
+  canvas.style.borderRadius = customization.cornerStyle === 'rounded' ? '12px' : '0';
+  canvas.style.width = '100%';
+  canvas.style.height = 'auto';
+  canvas.style.maxWidth = '300px';
+  canvas.setAttribute('aria-label', t('qrCodeAlt'));
+
+  wrapper.appendChild(canvas);
+  elements.qrContainer.appendChild(wrapper);
+
+  if (customization.showCaption && customization.caption) {
+    const caption = document.createElement('div');
+    caption.textContent = customization.caption;
+    caption.className = 'text-center text-gray-700 mt-4 px-2';
+    caption.style.fontWeight = customization.captionBold ? '700' : '500';
+    if (customization.captionSize === 'small') {
+      caption.style.fontSize = '1.125rem';
+    } else if (customization.captionSize === 'large') {
+      caption.style.fontSize = '1.25rem';
     } else {
-      renderCanvas.style.borderRadius = '0';
+      caption.style.fontSize = '2rem';
     }
-
-    renderCanvas.style.width = '100%';
-    renderCanvas.style.height = 'auto';
-    renderCanvas.style.maxWidth = '300px';
-    renderCanvas.setAttribute('aria-label', t('qrCodeAlt'));
-    wrapper.appendChild(renderCanvas);
-    elements.qrContainer.appendChild(wrapper);
-
-    if (customization.showCaption && customization.caption) {
-      const caption = document.createElement('div');
-      caption.textContent = customization.caption;
-      caption.className = 'text-center text-gray-700 mt-4 px-2';
-      caption.style.fontWeight = customization.captionBold ? '700' : '500';
-      if (customization.captionSize === 'small') {
-        caption.style.fontSize = '1.125rem';
-      } else if (customization.captionSize === 'large') {
-        caption.style.fontSize = '1.25rem';
-      } else {
-        caption.style.fontSize = '2rem';
-      }
-      elements.qrContainer.appendChild(caption);
-    }
-
-    elements.qrPlaceholder.classList.add('hidden');
-    elements.qrContent.classList.remove('hidden');
-    elements.actions.classList.remove('hidden');
-    elements.qrDataBlock.classList.remove('hidden');
-    elements.qrData.textContent = data;
+    elements.qrContainer.appendChild(caption);
   }
+
+  elements.qrPlaceholder.classList.add('hidden');
+  elements.qrContent.classList.remove('hidden');
+  elements.actions.classList.remove('hidden');
+  elements.qrDataBlock.classList.remove('hidden');
+  elements.qrData.textContent = data;
 }
 
 function updateStateAndRender() {
@@ -644,6 +787,9 @@ function resetState() {
   pendingRenderData = '';
   pendingRenderSignature = '';
   lastRenderSignature = '';
+  inFlightRenderSignature = '';
+  workerJobs.clear();
+  expectedWorkerJobId = 0;
   if (renderTimeoutId) {
     clearTimeout(renderTimeoutId);
     renderTimeoutId = null;
@@ -1229,6 +1375,7 @@ function boot() {
   updateTabButtons();
   updateFormVisibility();
   updateFormTitle();
+  initializeWorker();
   initializeEvents();
 }
 

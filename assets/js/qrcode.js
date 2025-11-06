@@ -775,6 +775,24 @@ class QRCode {
   }
 }
 
+export function generateQRCodeMatrix(data, options = {}) {
+  const { errorCorrectionLevel = QRErrorCorrectionLevel.M } = options;
+  const qr = new QRCode(-1, errorCorrectionLevel);
+  qr.addData(data);
+  qr.make();
+
+  const moduleCount = qr.moduleCount;
+  const modules = new Uint8Array(moduleCount * moduleCount);
+  let index = 0;
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      modules[index++] = qr.isDark(row, col) ? 1 : 0;
+    }
+  }
+
+  return { moduleCount, modules, version: qr.typeNumber };
+}
+
 export function createQRCode(data, options = {}) {
   const {
     errorCorrectionLevel = QRErrorCorrectionLevel.M,
@@ -783,9 +801,7 @@ export function createQRCode(data, options = {}) {
     background = '#ffffff'
   } = options;
 
-  const qr = new QRCode(-1, errorCorrectionLevel);
-  qr.addData(data);
-  qr.make();
+  const { moduleCount, modules } = generateQRCodeMatrix(data, { errorCorrectionLevel });
 
   const canvas = document.createElement('canvas');
   canvas.width = size;
@@ -794,15 +810,14 @@ export function createQRCode(data, options = {}) {
   ctx.fillStyle = background;
   ctx.fillRect(0, 0, size, size);
 
-  const cells = qr.moduleCount;
-  const cellSize = Math.floor(size / cells);
-  const margin = Math.floor((size - cellSize * cells) / 2);
+  const cellSize = Math.floor(size / moduleCount);
+  const margin = Math.floor((size - cellSize * moduleCount) / 2);
 
   ctx.fillStyle = color;
-
-  for (let row = 0; row < cells; row++) {
-    for (let col = 0; col < cells; col++) {
-      if (qr.isDark(row, col)) {
+  let index = 0;
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (modules[index++]) {
         const x = margin + col * cellSize;
         const y = margin + row * cellSize;
         ctx.fillRect(x, y, cellSize, cellSize);
@@ -810,7 +825,7 @@ export function createQRCode(data, options = {}) {
     }
   }
 
-  return { canvas, qr };
+  return { canvas, moduleCount, modules };
 }
 
 export { QRErrorCorrectionLevel };
