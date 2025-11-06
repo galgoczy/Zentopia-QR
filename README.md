@@ -1,39 +1,41 @@
 # Zentopia QR Code Generator
 
-A modern QR code generator for Zentopia Labs built with React, TypeScript, Vite, and Tailwind CSS. The application supports URLs, free-form text, contact vCards, WiFi credentials, and advanced styling customizations including captions and embedded logos.
+A fully client-side QR code generator for Zentopia Labs that runs without any build tooling or external package installs. The app supports URLs, free-form text, contact vCards, and WiFi credentials while offering extensive styling controls such as custom colors, rounded modules, embedded logos, and captions.
 
-## Getting Started
+## Features
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+- Locale-aware interface with English and Spanish translations detected from the browser.
+- Multiple QR content types: URL, text, contact (vCard), and WiFi network credentials.
+- Advanced presentation controls including module shape, finder color, border style, captions, and center logos.
+- High-resolution PNG and SVG export plus one-click data copy.
+- Privacy-friendly: all work happens in the browser—no data is sent to a server.
 
-2. Start the development server:
-   ```bash
-   npm run dev
-   ```
+## Running the app locally
 
-3. Open your browser at the address printed in the terminal (typically `http://localhost:5173`).
-
-## Building for Production
+No dependency installation is required. Serve the project directory with any static file server. For example, using Python:
 
 ```bash
-npm run build
+python -m http.server 8000
 ```
 
-This command runs TypeScript type checking and produces a production build in the `dist` folder.
+Then open [http://localhost:8000](http://localhost:8000) in your browser. The interface will automatically render once the page loads.
 
-## Previewing the Production Build
+## Locale override
 
-```bash
-npm run preview
+The page defaults to the browser locale. To force a specific language, update the `data-app-locale` attribute on the `<html>` tag inside `index.html` (e.g., `data-app-locale="es-ES"`). Leave the placeholder `{{APP_LOCALE}}` intact if you want runtime detection.
+
+## Project structure
+
+```
+├── assets
+│   ├── css
+│   │   └── styles.css      # Tailored styles for shared UI elements
+│   └── js
+│       ├── app.js          # Application logic and UI wiring
+│       └── qrcode.js       # Self-contained QR code implementation
+└── index.html              # Single-page application shell
 ```
 
-## Environment Variables
+## Browser support
 
-The interface language can be overridden with the `VITE_APP_LOCALE` environment variable (e.g., `en-US` or `es-ES`). When unset, the app defaults to the browser locale.
-
-```bash
-VITE_APP_LOCALE=es-ES npm run dev
-```
+The generator targets modern evergreen browsers with ES modules support. All functionality (including canvas exports and clipboard actions) runs entirely client-side with no external dependencies.

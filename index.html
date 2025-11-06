@@ -1,13 +1,293 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-app-locale="{{APP_LOCALE}}">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zentopia Labs • QR Code Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
-  <body class="bg-slate-50">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4">
+    <div class="max-w-6xl mx-auto" id="app">
+      <header class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl mb-4">
+          <span class="icon icon-qr text-white"></span>
+        </div>
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2" data-i18n="appTitle"></h1>
+        <p class="text-gray-600 text-lg" data-i18n="appDescription"></p>
+      </header>
+
+      <section class="hidden" id="ad-top" aria-hidden="true">
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 mb-8 text-center">
+          <div class="text-gray-500 text-sm mb-2">Advertisement</div>
+          <div class="bg-white rounded p-4 min-h-[100px] flex items-center justify-center">
+            <span class="text-gray-400 text-xs">728x90 AdSense Banner</span>
+          </div>
+        </div>
+      </section>
+
+      <main class="bg-white rounded-3xl shadow-2xl overflow-hidden" id="main-card">
+        <nav class="border-b border-gray-200" id="tablist" role="tablist" aria-label="QR data types">
+          <button class="tab-button" data-tab="url">
+            <span class="icon icon-link"></span>
+            <span data-i18n="urlTab"></span>
+          </button>
+          <button class="tab-button" data-tab="text">
+            <span class="icon icon-text"></span>
+            <span data-i18n="textTab"></span>
+          </button>
+          <button class="tab-button" data-tab="contact">
+            <span class="icon icon-user"></span>
+            <span data-i18n="contactTab"></span>
+          </button>
+          <button class="tab-button" data-tab="wifi">
+            <span class="icon icon-wifi"></span>
+            <span data-i18n="wifiTab"></span>
+          </button>
+        </nav>
+
+        <div class="p-8">
+          <div class="grid lg:grid-cols-3 gap-8">
+            <section class="lg:col-span-2 space-y-6" id="form-section">
+              <h2 class="form-title" id="form-title"></h2>
+
+              <form class="space-y-6" id="qr-form" novalidate>
+                <div class="form-group" data-section="url">
+                  <label class="form-label" data-i18n="websiteUrl"></label>
+                  <input type="url" id="url-input" class="form-input" />
+                  <p class="form-help" data-i18n="urlHelp"></p>
+                </div>
+
+                <div class="form-group" data-section="text">
+                  <label class="form-label" data-i18n="textContent"></label>
+                  <textarea id="text-input" rows="4" class="form-textarea"></textarea>
+                </div>
+
+                <div class="form-group space-y-4" data-section="contact">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="form-label" data-i18n="firstName"></label>
+                      <input type="text" id="contact-first" class="form-input" />
+                    </div>
+                    <div>
+                      <label class="form-label" data-i18n="lastName"></label>
+                      <input type="text" id="contact-last" class="form-input" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="form-label" data-i18n="phoneNumber"></label>
+                    <input type="tel" id="contact-phone" class="form-input" />
+                  </div>
+                  <div>
+                    <label class="form-label" data-i18n="emailAddress"></label>
+                    <input type="email" id="contact-email" class="form-input" />
+                  </div>
+                  <div>
+                    <label class="form-label" data-i18n="organization"></label>
+                    <input type="text" id="contact-organization" class="form-input" />
+                  </div>
+                  <div>
+                    <label class="form-label" data-i18n="website"></label>
+                    <input type="url" id="contact-url" class="form-input" />
+                  </div>
+                </div>
+
+                <div class="form-group space-y-4" data-section="wifi">
+                  <div>
+                    <label class="form-label" data-i18n="wifiNetworkName"></label>
+                    <input type="text" id="wifi-ssid" class="form-input" />
+                  </div>
+                  <div>
+                    <label class="form-label" data-i18n="wifiPassword"></label>
+                    <input type="password" id="wifi-password" class="form-input" />
+                  </div>
+                  <div>
+                    <label class="form-label" data-i18n="wifiSecurity"></label>
+                    <select id="wifi-security" class="form-select">
+                      <option value="Open" data-i18n="wifiOpen"></option>
+                      <option value="WPA" data-i18n="wifiWpa"></option>
+                      <option value="WEP" data-i18n="wifiWep"></option>
+                    </select>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" id="wifi-hidden" class="form-checkbox" />
+                    <label for="wifi-hidden" class="ml-2 text-sm font-medium text-gray-700" data-i18n="wifiHidden"></label>
+                  </div>
+                </div>
+              </form>
+
+              <button id="reset-button" class="reset-button"></button>
+
+              <section class="customization" id="customization">
+                <h3 class="customization-title" data-i18n="customization"></h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="customization-field">
+                    <label class="form-label" data-i18n="codeColor"></label>
+                    <input type="color" id="color-code" class="color-input" />
+                  </div>
+                  <div class="customization-field">
+                    <label class="form-label" data-i18n="backgroundColor"></label>
+                    <input type="color" id="color-background" class="color-input" />
+                  </div>
+                  <div class="customization-field">
+                    <label class="form-label" data-i18n="cornerSquareColor"></label>
+                    <input type="color" id="color-corner" class="color-input" />
+                  </div>
+                  <div class="customization-field">
+                    <label class="form-label" data-i18n="borderColor"></label>
+                    <input type="color" id="color-border" class="color-input" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div class="customization-field">
+                    <label class="form-label" data-i18n="cornerStyle"></label>
+                    <select id="corner-style" class="form-select">
+                      <option value="square" data-i18n="squareCorners"></option>
+                      <option value="rounded" data-i18n="roundedCorners"></option>
+                    </select>
+                  </div>
+                  <div class="customization-field">
+                    <label class="form-label" data-i18n="moduleStyle"></label>
+                    <select id="module-style" class="form-select">
+                      <option value="square" data-i18n="squareModules"></option>
+                      <option value="round" data-i18n="roundModules"></option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="border-t border-gray-200 mt-6 pt-4">
+                  <h4 class="text-md font-semibold text-gray-800 mb-3" data-i18n="centerLogo"></h4>
+                  <div id="logo-upload-section">
+                    <label class="form-label" data-i18n="uploadLogo"></label>
+                    <input type="file" id="logo-input" accept="image/*" class="file-input" />
+                  </div>
+                  <div id="logo-actions" class="hidden space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm text-gray-600" data-i18n="logoUploaded">Logo uploaded</span>
+                      <button id="remove-logo" class="remove-logo" data-i18n="removeLogo"></button>
+                    </div>
+                    <div>
+                      <label class="form-label" data-i18n="logoSize"></label>
+                      <select id="logo-size" class="form-select">
+                        <option value="small" data-i18n="logoSmall"></option>
+                        <option value="large" data-i18n="logoLarge"></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4">
+                  <div class="flex items-center mb-2">
+                    <input type="checkbox" id="caption-toggle" class="form-checkbox" />
+                    <label for="caption-toggle" class="ml-2 text-sm font-medium text-gray-700" data-i18n="showCaption"></label>
+                  </div>
+                  <div id="caption-settings" class="hidden space-y-3">
+                    <input type="text" id="caption-text" class="form-input" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1" data-i18n="captionSize"></label>
+                        <select id="caption-size" class="form-select text-sm">
+                          <option value="small" data-i18n="captionSmall"></option>
+                          <option value="large" data-i18n="captionLarge"></option>
+                          <option value="extraLarge" data-i18n="captionExtraLarge"></option>
+                        </select>
+                      </div>
+                      <div class="flex items-center h-full">
+                        <input type="checkbox" id="caption-bold" class="form-checkbox" />
+                        <label for="caption-bold" class="ml-2 text-sm text-gray-700" data-i18n="captionBold"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
+
+            <section class="flex flex-col items-center space-y-6" id="preview-section">
+              <h2 class="text-2xl font-semibold text-gray-800" data-i18n="generatedQrCode"></h2>
+              <div class="bg-gray-50 rounded-2xl p-8 w-full max-w-sm" id="qr-preview">
+                <div class="placeholder" id="qr-placeholder">
+                  <div class="icon-placeholder"></div>
+                  <p class="text-gray-500" data-i18n="fillFormPrompt"></p>
+                </div>
+                <div class="hidden text-center" id="qr-content">
+                  <div id="qr-container" class="flex flex-col justify-center items-center"></div>
+                  <p class="text-sm text-gray-600 mt-4" data-i18n="scanQrCode"></p>
+                </div>
+              </div>
+
+              <div id="actions" class="hidden flex flex-col gap-4 w-full max-w-sm">
+                <div class="flex gap-2">
+                  <button id="download-png" class="action-button primary">
+                    <span class="icon icon-download"></span>
+                    <span data-i18n="downloadPng"></span>
+                  </button>
+                  <button id="download-svg" class="action-button success">
+                    <span class="icon icon-download"></span>
+                    <span data-i18n="downloadSvg"></span>
+                  </button>
+                </div>
+                <button id="copy-data" class="copy-button">
+                  <span class="icon icon-copy"></span>
+                  <span id="copy-label" data-i18n="copyData"></span>
+                </button>
+              </div>
+
+              <div id="qr-data-block" class="hidden w-full max-w-sm">
+                <h3 class="text-sm font-medium text-gray-700 mb-2" data-i18n="qrCodeData"></h3>
+                <div class="bg-gray-100 rounded-lg p-3 text-xs text-gray-600 max-h-32 overflow-y-auto">
+                  <pre id="qr-data" class="whitespace-pre-wrap break-words"></pre>
+                </div>
+              </div>
+
+              <section id="ad-side" class="hidden">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 w-full max-w-sm text-center mt-6">
+                  <div class="text-gray-500 text-xs mb-2">Advertisement</div>
+                  <div class="bg-white rounded p-3 min-h-[200px] flex items-center justify-center">
+                    <span class="text-gray-400 text-xs">250x250 AdSense Square</span>
+                  </div>
+                </div>
+              </section>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <section class="hidden" id="ad-bottom" aria-hidden="true">
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 mt-8 mb-8 text-center">
+          <div class="text-gray-500 text-sm mb-2">Advertisement</div>
+          <div class="bg-white rounded p-4 min-h-[250px] flex items-center justify-center">
+            <span class="text-gray-400 text-xs">300x250 AdSense Rectangle</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="text-center mt-8 text-gray-500 text-sm space-y-3">
+        <p data-i18n="footerText"></p>
+        <div class="flex flex-wrap justify-center gap-4 text-xs">
+          <button class="footer-link" data-modal="terms" data-i18n="termsTitle">Terms of Use</button>
+          <button class="footer-link" data-modal="privacy" data-i18n="privacyTitle">Privacy Policy</button>
+          <button class="footer-link" data-modal="contact" data-i18n="contactTitle">Contact</button>
+        </div>
+        <p>© 2025 <a href="https://zentopia.io" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-700 transition-colors">Zentopia Labs</a> - All rights reserved</p>
+      </footer>
+    </div>
+
+    <div id="modal-root"></div>
+
+    <template id="modal-template">
+      <div class="modal-backdrop" data-modal-backdrop>
+        <div class="modal">
+          <div class="modal-header">
+            <h2 class="modal-title"></h2>
+            <button class="modal-close" data-modal-close>&times;</button>
+          </div>
+          <div class="modal-body"></div>
+        </div>
+      </div>
+    </template>
+
+    <script type="module" src="assets/js/app.js"></script>
   </body>
 </html>
