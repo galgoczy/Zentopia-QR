@@ -29,11 +29,15 @@ The page defaults to the browser locale. To force a specific language, update th
 ```
 ├── assets
 │   ├── css
-│   │   └── styles.css      # Tailored styles for shared UI elements
+│   │   └── main.css        # Custom layout, typography, and component styling
 │   └── js
-│       ├── app.js          # Application logic and UI wiring
-│       └── qrcode.js       # Self-contained QR code implementation
-└── index.html              # Single-page application shell
+│       ├── i18n.js         # Translation bundles and helpers
+│       ├── main.js         # UI state management and event wiring
+│       ├── render.js       # Canvas/SVG rendering utilities
+│       ├── download.js     # Export helpers for PNG and SVG assets
+│       └── qr
+│           └── encoder.js  # Self-contained QR code encoder
+└── index.html              # Application shell and semantic markup
 ```
 
 ## Browser support
