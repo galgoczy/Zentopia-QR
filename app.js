@@ -13,7 +13,7 @@ class ZentopiaQRGenerator {
             moduleStyle: 'square',
             frameStyle: 'square',
             logoImage: null,
-            logoSize: 20,
+            logoSize: 17,
             caption: ''
         };
 
@@ -98,10 +98,11 @@ class ZentopiaQRGenerator {
         });
 
         // Logo size
-        document.getElementById('logoSize').addEventListener('input', (e) => {
-            this.settings.logoSize = e.target.value;
-            document.getElementById('logoSizeValue').textContent = e.target.value + '%';
-            this.generateQRCode();
+        document.querySelectorAll('input[name="logoSize"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.settings.logoSize = parseInt(e.target.value);
+                this.generateQRCode();
+            });
         });
 
         // Caption
@@ -426,14 +427,31 @@ class ZentopiaQRGenerator {
     }
 
     downloadPNG() {
-        // Create high-res version
+        // Create high-res version with caption
+        const captionText = this.settings.caption;
+        const captionHeight = captionText ? 80 : 0;
+        const totalHeight = 900 + captionHeight;
+
         const downloadCanvas = document.createElement('canvas');
         downloadCanvas.width = 900;
-        downloadCanvas.height = 900;
+        downloadCanvas.height = totalHeight;
         const downloadCtx = downloadCanvas.getContext('2d');
 
-        // Copy current canvas
+        // Fill background
+        downloadCtx.fillStyle = this.settings.bgColor;
+        downloadCtx.fillRect(0, 0, 900, totalHeight);
+
+        // Copy current QR canvas
         downloadCtx.drawImage(this.canvas, 0, 0);
+
+        // Draw caption if exists
+        if (captionText) {
+            downloadCtx.fillStyle = '#000000';
+            downloadCtx.font = 'bold 32px Arial, sans-serif';
+            downloadCtx.textAlign = 'center';
+            downloadCtx.textBaseline = 'middle';
+            downloadCtx.fillText(captionText, 450, 900 + captionHeight / 2);
+        }
 
         // Convert to blob and download
         downloadCanvas.toBlob((blob) => {
@@ -451,10 +469,12 @@ class ZentopiaQRGenerator {
     downloadSVG() {
         // Generate SVG representation
         const size = 900;
-        const padding = 40;
+        const captionText = this.settings.caption;
+        const captionHeight = captionText ? 80 : 0;
+        const totalHeight = size + captionHeight;
 
         let svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="${size}" height="${totalHeight}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <pattern id="qrPattern" x="0" y="0" width="1" height="1">
             <image x="0" y="0" width="${size}" height="${size}" xlink:href="${this.canvas.toDataURL()}" />
@@ -462,13 +482,25 @@ class ZentopiaQRGenerator {
     </defs>
 `;
 
-        if (this.settings.frameStyle === 'rounded') {
-            svg += `    <rect width="${size}" height="${size}" rx="40" ry="40" fill="${this.settings.bgColor}"/>\n`;
-        } else {
-            svg += `    <rect width="${size}" height="${size}" fill="${this.settings.bgColor}"/>\n`;
+        // Background
+        svg += `    <rect width="${size}" height="${totalHeight}" fill="${this.settings.bgColor}"/>\n`;
+
+        // QR Code
+        svg += `    <rect x="0" y="0" width="${size}" height="${size}" fill="url(#qrPattern)"/>\n`;
+
+        // Caption
+        if (captionText) {
+            // Escape XML special characters
+            const escapedText = captionText
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+
+            svg += `    <text x="${size / 2}" y="${size + captionHeight / 2}" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="#000000">${escapedText}</text>\n`;
         }
 
-        svg += `    <rect x="0" y="0" width="${size}" height="${size}" fill="url(#qrPattern)"/>\n`;
         svg += `</svg>`;
 
         // Download SVG

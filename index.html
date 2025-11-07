@@ -699,10 +699,20 @@
 
                 <!-- Logo Size -->
                 <div class="form-group">
-                    <label for="logoSize">Logo Size</label>
-                    <div class="range-wrapper">
-                        <input type="range" id="logoSize" min="10" max="30" value="20">
-                        <span class="range-value" id="logoSizeValue">20%</span>
+                    <label>Logo Size</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="logoSmall" name="logoSize" value="11">
+                            <label for="logoSmall">Small</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="logoMedium" name="logoSize" value="17" checked>
+                            <label for="logoMedium">Medium</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="logoLarge" name="logoSize" value="22">
+                            <label for="logoLarge">Large</label>
+                        </div>
                     </div>
                 </div>
 
