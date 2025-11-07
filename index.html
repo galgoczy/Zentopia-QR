@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Professional QR Code Generator by zentopia Labs</title>
+    <meta name="description" content="Professzionális, ingyenes QR kód generátor testreszabható színekkel, logóval és többféle formátumban.">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3JP6WRKKX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-E3JP6WRKKX');
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-light: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #1e1b4b 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--surface-light);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--bg-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--surface-light);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tab:hover {
+            background: var(--primary-dark);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .color-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--surface-light);
+            border-radius: 8px;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+        }
+
+        .color-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: var(--surface-light);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--surface-light);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+        }
+
+        .file-input-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-color);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .preview-section {
+            text-align: center;
+        }
+
+        .qr-container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            margin: 1.5rem auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #qrCanvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--surface-light);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Adsense Placeholder - Hidden */
+        .ad-placeholder {
+            display: none;
+            background: var(--surface-color);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin: 2rem 0;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-content a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-content a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-separator {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Range slider styling */
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface-light);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+        }
+
+        .range-value {
+            display: inline-block;
+            min-width: 40px;
+            text-align: right;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .range-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .color-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Free Professional QR Code Generator by zentopia Labs</h1>
+            <p class="subtitle">Create stunning, customizable QR codes in seconds</p>
+        </header>
+
+        <!-- Adsense Placeholder (Hidden) -->
+        <div class="ad-placeholder">
+            <p>Advertisement Space</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Panel - Controls -->
+            <div class="card">
+                <h2>QR Code Settings</h2>
+
+                <!-- Type Selection -->
+                <div class="form-group">
+                    <label>QR Code Type</label>
+                    <div class="tabs">
+                        <button class="tab active" data-tab="url">🌐 URL/Web</button>
+                        <button class="tab" data-tab="text">📝 Text</button>
+                        <button class="tab" data-tab="contact">👤 Contact</button>
+                        <button class="tab" data-tab="wifi">📶 WiFi</button>
+                    </div>
+                </div>
+
+                <!-- URL Tab -->
+                <div id="url-tab" class="tab-content active">
+                    <div class="form-group">
+                        <label for="urlInput">Website URL</label>
+                        <input type="url" id="urlInput" placeholder="https://example.com" value="https://zentopia.io">
+                    </div>
+                </div>
+
+                <!-- Text Tab -->
+                <div id="text-tab" class="tab-content">
+                    <div class="form-group">
+                        <label for="textInput">Text Content</label>
+                        <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Contact Tab -->
+                <div id="contact-tab" class="tab-content">
+                    <div class="form-group">
+                        <label for="contactName">Name</label>
+                        <input type="text" id="contactName" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Phone</label>
+                        <input type="tel" id="contactPhone" placeholder="+36 30 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactOrg">Organization</label>
+                        <input type="text" id="contactOrg" placeholder="Company Name">
+                    </div>
+                </div>
+
+                <!-- WiFi Tab -->
+                <div id="wifi-tab" class="tab-content">
+                    <div class="form-group">
+                        <label for="wifiSsid">Network Name (SSID)</label>
+                        <input type="text" id="wifiSsid" placeholder="MyWiFi">
+                    </div>
+                    <div class="form-group">
+                        <label for="wifiPassword">Password</label>
+                        <input type="text" id="wifiPassword" placeholder="password123">
+                    </div>
+                    <div class="form-group">
+                        <label for="wifiSecurity">Security Type</label>
+                        <select id="wifiSecurity">
+                            <option value="WPA">WPA/WPA2</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">None</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Caption -->
+                <div class="form-group">
+                    <label for="captionInput">Caption (optional)</label>
+                    <input type="text" id="captionInput" placeholder="Scan me!">
+                </div>
+
+                <!-- Customization -->
+                <h2 style="margin-top: 2rem;">Customization</h2>
+
+                <!-- Colors -->
+                <div class="form-group">
+                    <label>Colors</label>
+                    <div class="color-grid">
+                        <div class="color-input-group">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Modules</span>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="moduleColor" value="#000000">
+                                <span class="color-value" id="moduleColorValue">#000000</span>
+                            </div>
+                        </div>
+                        <div class="color-input-group">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Background</span>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="bgColor" value="#FFFFFF">
+                                <span class="color-value" id="bgColorValue">#FFFFFF</span>
+                            </div>
+                        </div>
+                        <div class="color-input-group">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Corner Dots</span>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="cornerColor" value="#6366f1">
+                                <span class="color-value" id="cornerColorValue">#6366f1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frame Style -->
+                <div class="form-group">
+                    <label>Frame Style</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="frameSquare" name="frameStyle" value="square" checked>
+                            <label for="frameSquare">Square</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="frameRounded" name="frameStyle" value="rounded">
+                            <label for="frameRounded">Rounded</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logo Upload -->
+                <div class="form-group">
+                    <label>Logo (optional)</label>
+                    <div class="file-input-wrapper">
+                        <label for="logoUpload" class="file-input-btn">
+                            📁 Choose Logo Image
+                            <span id="logoFileName" style="display: block; font-size: 0.85rem; margin-top: 0.25rem;"></span>
+                        </label>
+                        <input type="file" id="logoUpload" accept="image/*">
+                    </div>
+                </div>
+
+                <!-- Logo Size -->
+                <div class="form-group">
+                    <label for="logoSize">Logo Size</label>
+                    <div class="range-wrapper">
+                        <input type="range" id="logoSize" min="10" max="30" value="20">
+                        <span class="range-value" id="logoSizeValue">20%</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="generateBtn" style="width: 100%; margin-top: 1rem;">
+                    ✨ Generate QR Code
+                </button>
+            </div>
+
+            <!-- Right Panel - Preview -->
+            <div class="card preview-section">
+                <h2>Preview</h2>
+                <div class="qr-container">
+                    <canvas id="qrCanvas" width="400" height="400"></canvas>
+                    <div id="captionDisplay" style="margin-top: 1rem; font-size: 1.1rem; color: #000; font-weight: 500;"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="downloadPng">
+                        ⬇️ Download PNG
+                    </button>
+                    <button class="btn btn-secondary" id="downloadSvg">
+                        ⬇️ Download SVG
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adsense Placeholder (Hidden) -->
+        <div class="ad-placeholder">
+            <p>Advertisement Space</p>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div>© zentopia Labs 2025 <span class="footer-separator">|</span> <a href="https://zentopia.io" target="_blank">zentopia.io</a></div>
+                <span class="footer-separator">|</span>
+                <a href="#" id="privacyLink">Adatkezelési Tájékoztató</a>
+                <span class="footer-separator">|</span>
+                <div>Kapcsolat: <span style="unicode-bidi: bidi-override; direction: rtl;">uh.aipotnez@trats</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+
+    <script src="app.js"></script>
+</body>
+</html>

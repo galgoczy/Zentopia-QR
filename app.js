@@ -1,0 +1,400 @@
+// QR Code Generator App for zentopia Labs
+// Comprehensive QR code generation with customization
+
+class ZentopiaQRGenerator {
+    constructor() {
+        this.currentTab = 'url';
+        this.qrData = '';
+        this.settings = {
+            moduleColor: '#000000',
+            bgColor: '#FFFFFF',
+            cornerColor: '#6366f1',
+            frameStyle: 'square',
+            logoImage: null,
+            logoSize: 20,
+            caption: ''
+        };
+
+        this.canvas = document.getElementById('qrCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.qrMatrix = null;
+
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.generateQRCode();
+    }
+
+    setupEventListeners() {
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const tabName = e.target.dataset.tab;
+                this.switchTab(tabName);
+            });
+        });
+
+        // Color inputs
+        document.getElementById('moduleColor').addEventListener('input', (e) => {
+            this.settings.moduleColor = e.target.value;
+            document.getElementById('moduleColorValue').textContent = e.target.value;
+            this.generateQRCode();
+        });
+
+        document.getElementById('bgColor').addEventListener('input', (e) => {
+            this.settings.bgColor = e.target.value;
+            document.getElementById('bgColorValue').textContent = e.target.value;
+            this.generateQRCode();
+        });
+
+        document.getElementById('cornerColor').addEventListener('input', (e) => {
+            this.settings.cornerColor = e.target.value;
+            document.getElementById('cornerColorValue').textContent = e.target.value;
+            this.generateQRCode();
+        });
+
+        // Frame style
+        document.querySelectorAll('input[name="frameStyle"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.settings.frameStyle = e.target.value;
+                this.generateQRCode();
+            });
+        });
+
+        // Logo upload
+        document.getElementById('logoUpload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('logoFileName').textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.settings.logoImage = img;
+                        this.generateQRCode();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Logo size
+        document.getElementById('logoSize').addEventListener('input', (e) => {
+            this.settings.logoSize = e.target.value;
+            document.getElementById('logoSizeValue').textContent = e.target.value + '%';
+            this.generateQRCode();
+        });
+
+        // Caption
+        document.getElementById('captionInput').addEventListener('input', (e) => {
+            this.settings.caption = e.target.value;
+            document.getElementById('captionDisplay').textContent = e.target.value;
+        });
+
+        // Generate button
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            this.generateQRCode();
+        });
+
+        // Input fields - auto generate on change
+        const autoGenFields = ['urlInput', 'textInput', 'contactName', 'contactEmail',
+                               'contactPhone', 'contactOrg', 'wifiSsid', 'wifiPassword', 'wifiSecurity'];
+        autoGenFields.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', () => this.generateQRCode());
+            }
+        });
+
+        // Download buttons
+        document.getElementById('downloadPng').addEventListener('click', () => this.downloadPNG());
+        document.getElementById('downloadSvg').addEventListener('click', () => this.downloadSVG());
+
+        // Privacy policy modal
+        document.getElementById('privacyLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Adatkezelési Tájékoztató\n\n' +
+                  'A zentopia Labs QR kód generátor nem gyűjt és nem tárol személyes adatokat. ' +
+                  'Minden QR kód generálás a böngészőjében történik, az adatok nem kerülnek szerverre továbbításra. ' +
+                  'A Google Analytics segítségével névtelen használati statisztikákat gyűjtünk az oldal fejlesztése érdekében.\n\n' +
+                  'zentopia Labs © 2025');
+        });
+    }
+
+    switchTab(tabName) {
+        // Update active tab button
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Update active tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+
+        this.currentTab = tabName;
+        this.generateQRCode();
+    }
+
+    getQRData() {
+        let data = '';
+
+        switch(this.currentTab) {
+            case 'url':
+                data = document.getElementById('urlInput').value || 'https://zentopia.io';
+                break;
+
+            case 'text':
+                data = document.getElementById('textInput').value || 'Hello from zentopia Labs!';
+                break;
+
+            case 'contact':
+                const name = document.getElementById('contactName').value;
+                const email = document.getElementById('contactEmail').value;
+                const phone = document.getElementById('contactPhone').value;
+                const org = document.getElementById('contactOrg').value;
+
+                // vCard format
+                data = 'BEGIN:VCARD\n';
+                data += 'VERSION:3.0\n';
+                if (name) data += `FN:${name}\n`;
+                if (org) data += `ORG:${org}\n`;
+                if (email) data += `EMAIL:${email}\n`;
+                if (phone) data += `TEL:${phone}\n`;
+                data += 'END:VCARD';
+                break;
+
+            case 'wifi':
+                const ssid = document.getElementById('wifiSsid').value;
+                const password = document.getElementById('wifiPassword').value;
+                const security = document.getElementById('wifiSecurity').value;
+
+                // WiFi QR format
+                data = `WIFI:T:${security};S:${ssid};P:${password};;`;
+                break;
+        }
+
+        return data;
+    }
+
+    generateQRCode() {
+        this.qrData = this.getQRData();
+
+        if (!this.qrData) {
+            return;
+        }
+
+        try {
+            // Use qrcode-generator library
+            const typeNumber = 0; // Auto-detect
+            const errorCorrectionLevel = 'H'; // High error correction for logo support
+            const qr = qrcode(typeNumber, errorCorrectionLevel);
+            qr.addData(this.qrData);
+            qr.make();
+
+            this.qrMatrix = qr;
+            this.drawCustomQR();
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+        }
+    }
+
+    drawCustomQR() {
+        if (!this.qrMatrix) return;
+
+        const moduleCount = this.qrMatrix.getModuleCount();
+        const size = 900; // High quality output
+        const padding = 80;
+        const qrSize = size - padding * 2;
+        const cellSize = qrSize / moduleCount;
+
+        this.canvas.width = size;
+        this.canvas.height = size;
+
+        const ctx = this.ctx;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, size, size);
+
+        // Background with frame style
+        if (this.settings.frameStyle === 'rounded') {
+            this.drawRoundedRect(ctx, 0, 0, size, size, 40, this.settings.bgColor);
+        } else {
+            ctx.fillStyle = this.settings.bgColor;
+            ctx.fillRect(0, 0, size, size);
+        }
+
+        // Draw QR code modules
+        for (let row = 0; row < moduleCount; row++) {
+            for (let col = 0; col < moduleCount; col++) {
+                if (this.qrMatrix.isDark(row, col)) {
+                    const x = padding + col * cellSize;
+                    const y = padding + row * cellSize;
+
+                    // Check if this is a corner position indicator
+                    const isCorner = this.isCornerModule(row, col, moduleCount);
+
+                    ctx.fillStyle = isCorner ? this.settings.cornerColor : this.settings.moduleColor;
+
+                    if (this.settings.frameStyle === 'rounded') {
+                        // Draw rounded modules
+                        this.drawRoundedRect(ctx, x, y, cellSize * 0.9, cellSize * 0.9, cellSize * 0.2, ctx.fillStyle);
+                    } else {
+                        ctx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
+                    }
+                }
+            }
+        }
+
+        // Draw logo if present
+        if (this.settings.logoImage) {
+            this.drawLogo(ctx, size, moduleCount, cellSize, padding);
+        }
+    }
+
+    isCornerModule(row, col, moduleCount) {
+        // Position detection patterns are in three corners
+        const cornerSize = 7;
+
+        // Top-left corner
+        if (row < cornerSize && col < cornerSize) return true;
+
+        // Top-right corner
+        if (row < cornerSize && col >= moduleCount - cornerSize) return true;
+
+        // Bottom-left corner
+        if (row >= moduleCount - cornerSize && col < cornerSize) return true;
+
+        return false;
+    }
+
+    drawRoundedRect(ctx, x, y, width, height, radius, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    drawLogo(ctx, canvasSize, moduleCount, cellSize, canvasPadding) {
+        const logoSize = (canvasSize * this.settings.logoSize) / 100;
+        const x = (canvasSize - logoSize) / 2;
+        const y = (canvasSize - logoSize) / 2;
+
+        // Calculate which modules to clear for the logo
+        const centerModule = Math.floor(moduleCount / 2);
+        const logoModuleSize = Math.ceil(logoSize / cellSize / 2);
+
+        // Clear the modules where the logo will be
+        ctx.fillStyle = this.settings.bgColor;
+        const clearSize = logoModuleSize * 2 * cellSize + cellSize;
+        const clearX = canvasPadding + (centerModule - logoModuleSize) * cellSize;
+        const clearY = canvasPadding + (centerModule - logoModuleSize) * cellSize;
+
+        if (this.settings.frameStyle === 'rounded') {
+            this.drawRoundedRect(ctx, clearX - 10, clearY - 10,
+                                clearSize + 20, clearSize + 20, 20, this.settings.bgColor);
+        } else {
+            ctx.fillRect(clearX - 10, clearY - 10, clearSize + 20, clearSize + 20);
+        }
+
+        // Draw logo
+        if (this.settings.frameStyle === 'rounded') {
+            // Clip to rounded rectangle
+            ctx.save();
+            ctx.beginPath();
+            const logoRadius = 15;
+            ctx.moveTo(x + logoRadius, y);
+            ctx.lineTo(x + logoSize - logoRadius, y);
+            ctx.quadraticCurveTo(x + logoSize, y, x + logoSize, y + logoRadius);
+            ctx.lineTo(x + logoSize, y + logoSize - logoRadius);
+            ctx.quadraticCurveTo(x + logoSize, y + logoSize, x + logoSize - logoRadius, y + logoSize);
+            ctx.lineTo(x + logoRadius, y + logoSize);
+            ctx.quadraticCurveTo(x, y + logoSize, x, y + logoSize - logoRadius);
+            ctx.lineTo(x, y + logoRadius);
+            ctx.quadraticCurveTo(x, y, x + logoRadius, y);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(this.settings.logoImage, x, y, logoSize, logoSize);
+            ctx.restore();
+        } else {
+            ctx.drawImage(this.settings.logoImage, x, y, logoSize, logoSize);
+        }
+    }
+
+    downloadPNG() {
+        // Create high-res version
+        const downloadCanvas = document.createElement('canvas');
+        downloadCanvas.width = 900;
+        downloadCanvas.height = 900;
+        const downloadCtx = downloadCanvas.getContext('2d');
+
+        // Copy current canvas
+        downloadCtx.drawImage(this.canvas, 0, 0);
+
+        // Convert to blob and download
+        downloadCanvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `zentopia-qrcode-${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 'image/png');
+    }
+
+    downloadSVG() {
+        // Generate SVG representation
+        const size = 900;
+        const padding = 40;
+
+        let svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <pattern id="qrPattern" x="0" y="0" width="1" height="1">
+            <image x="0" y="0" width="${size}" height="${size}" xlink:href="${this.canvas.toDataURL()}" />
+        </pattern>
+    </defs>
+`;
+
+        if (this.settings.frameStyle === 'rounded') {
+            svg += `    <rect width="${size}" height="${size}" rx="40" ry="40" fill="${this.settings.bgColor}"/>\n`;
+        } else {
+            svg += `    <rect width="${size}" height="${size}" fill="${this.settings.bgColor}"/>\n`;
+        }
+
+        svg += `    <rect x="0" y="0" width="${size}" height="${size}" fill="url(#qrPattern)"/>\n`;
+        svg += `</svg>`;
+
+        // Download SVG
+        const blob = new Blob([svg], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `zentopia-qrcode-${Date.now()}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+}
+
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new ZentopiaQRGenerator();
+});
