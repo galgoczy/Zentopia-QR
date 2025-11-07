@@ -9,6 +9,8 @@ class ZentopiaQRGenerator {
             moduleColor: '#000000',
             bgColor: '#FFFFFF',
             cornerColor: '#6366f1',
+            frameColor: '#000000',
+            moduleStyle: 'square',
             frameStyle: 'square',
             logoImage: null,
             logoSize: 20,
@@ -53,6 +55,20 @@ class ZentopiaQRGenerator {
             this.settings.cornerColor = e.target.value;
             document.getElementById('cornerColorValue').textContent = e.target.value;
             this.generateQRCode();
+        });
+
+        document.getElementById('frameColor').addEventListener('input', (e) => {
+            this.settings.frameColor = e.target.value;
+            document.getElementById('frameColorValue').textContent = e.target.value;
+            this.generateQRCode();
+        });
+
+        // Module style
+        document.querySelectorAll('input[name="moduleStyle"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.settings.moduleStyle = e.target.value;
+                this.generateQRCode();
+            });
         });
 
         // Frame style
@@ -116,10 +132,10 @@ class ZentopiaQRGenerator {
         // Privacy policy modal
         document.getElementById('privacyLink').addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Adatkezelési Tájékoztató\n\n' +
-                  'A zentopia Labs QR kód generátor nem gyűjt és nem tárol személyes adatokat. ' +
-                  'Minden QR kód generálás a böngészőjében történik, az adatok nem kerülnek szerverre továbbításra. ' +
-                  'A Google Analytics segítségével névtelen használati statisztikákat gyűjtünk az oldal fejlesztése érdekében.\n\n' +
+            alert('Privacy Policy\n\n' +
+                  'The zentopia Labs QR code generator does not collect or store personal data. ' +
+                  'All QR code generation happens in your browser, data is not transmitted to any server. ' +
+                  'We use Google Analytics to collect anonymous usage statistics to improve the service.\n\n' +
                   'zentopia Labs © 2025');
         });
     }
@@ -209,6 +225,7 @@ class ZentopiaQRGenerator {
 
         const moduleCount = this.qrMatrix.getModuleCount();
         const size = 900; // High quality output
+        const frameBorder = 40; // Border for the frame
         const padding = 80;
         const qrSize = size - padding * 2;
         const cellSize = qrSize / moduleCount;
@@ -221,12 +238,23 @@ class ZentopiaQRGenerator {
         // Clear canvas
         ctx.clearRect(0, 0, size, size);
 
-        // Background with frame style
+        // Background
+        ctx.fillStyle = this.settings.bgColor;
+        ctx.fillRect(0, 0, size, size);
+
+        // Draw frame border around QR code
+        const frameMargin = 20;
+        const frameX = frameMargin;
+        const frameY = frameMargin;
+        const frameSize = size - frameMargin * 2;
+
+        ctx.strokeStyle = this.settings.frameColor;
+        ctx.lineWidth = 12;
+
         if (this.settings.frameStyle === 'rounded') {
-            this.drawRoundedRect(ctx, 0, 0, size, size, 40, this.settings.bgColor);
+            this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 30);
         } else {
-            ctx.fillStyle = this.settings.bgColor;
-            ctx.fillRect(0, 0, size, size);
+            ctx.strokeRect(frameX, frameY, frameSize, frameSize);
         }
 
         // Draw QR code modules
@@ -241,10 +269,17 @@ class ZentopiaQRGenerator {
 
                     ctx.fillStyle = isCorner ? this.settings.cornerColor : this.settings.moduleColor;
 
-                    if (this.settings.frameStyle === 'rounded') {
+                    // Draw based on module style
+                    if (this.settings.moduleStyle === 'dot') {
+                        // Draw circular modules
+                        ctx.beginPath();
+                        ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.45, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (this.settings.moduleStyle === 'rounded') {
                         // Draw rounded modules
                         this.drawRoundedRect(ctx, x, y, cellSize * 0.9, cellSize * 0.9, cellSize * 0.2, ctx.fillStyle);
                     } else {
+                        // Draw square modules
                         ctx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
                     }
                 }
@@ -289,6 +324,21 @@ class ZentopiaQRGenerator {
         ctx.fill();
     }
 
+    drawRoundedRectStroke(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.stroke();
+    }
+
     drawLogo(ctx, canvasSize, moduleCount, cellSize, canvasPadding) {
         const logoSize = (canvasSize * this.settings.logoSize) / 100;
         const x = (canvasSize - logoSize) / 2;
@@ -304,7 +354,7 @@ class ZentopiaQRGenerator {
         const clearX = canvasPadding + (centerModule - logoModuleSize) * cellSize;
         const clearY = canvasPadding + (centerModule - logoModuleSize) * cellSize;
 
-        if (this.settings.frameStyle === 'rounded') {
+        if (this.settings.moduleStyle === 'rounded' || this.settings.moduleStyle === 'dot') {
             this.drawRoundedRect(ctx, clearX - 10, clearY - 10,
                                 clearSize + 20, clearSize + 20, 20, this.settings.bgColor);
         } else {
@@ -312,7 +362,7 @@ class ZentopiaQRGenerator {
         }
 
         // Draw logo
-        if (this.settings.frameStyle === 'rounded') {
+        if (this.settings.moduleStyle === 'rounded' || this.settings.moduleStyle === 'dot') {
             // Clip to rounded rectangle
             ctx.save();
             ctx.beginPath();

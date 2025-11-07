@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Professional QR Code Generator by zentopia Labs</title>
-    <meta name="description" content="Professzionális, ingyenes QR kód generátor testreszabható színekkel, logóval és többféle formátumban.">
+    <meta name="description" content="Professional, free QR code generator with customizable colors, logo, and multiple formats.">
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3JP6WRKKX"></script>
@@ -59,11 +59,32 @@
         h1 {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text {
+            display: inline-block;
+        }
+
+        .logo-text .qr-text {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
+        }
+
+        .logo-text .by-text {
+            color: var(--text-secondary);
+            font-size: 0.6em;
+            font-weight: 500;
+        }
+
+        .logo-text .zentopia-text {
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .subtitle {
@@ -78,9 +99,18 @@
             margin-bottom: 3rem;
         }
 
-        @media (max-width: 968px) {
+        @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                margin-bottom: 2rem;
+                padding: 1rem 0;
             }
         }
 
@@ -435,12 +465,8 @@
         }
 
         @media (max-width: 640px) {
-            .container {
-                padding: 1rem;
-            }
-
             .card {
-                padding: 1.5rem;
+                padding: 1.25rem;
             }
 
             .button-group {
@@ -455,13 +481,47 @@
             .color-grid {
                 grid-template-columns: 1fr;
             }
+
+            .tabs {
+                gap: 0.35rem;
+            }
+
+            .tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                flex: 1;
+                min-width: auto;
+            }
+
+            .qr-container {
+                padding: 1rem;
+                max-width: 100%;
+            }
+
+            #qrCanvas {
+                max-width: 100%;
+                height: auto;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            .radio-option {
+                min-width: 90px;
+            }
+
+            .radio-option label {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Free Professional QR Code Generator by zentopia Labs</h1>
+            <h1><span class="logo-text"><span class="qr-text">QR Code Generator</span> <span class="by-text">by</span> <span class="zentopia-text">zentopia</span></span></h1>
             <p class="subtitle">Create stunning, customizable QR codes in seconds</p>
         </header>
 
@@ -479,7 +539,7 @@
                 <div class="form-group">
                     <label>QR Code Type</label>
                     <div class="tabs">
-                        <button class="tab active" data-tab="url">🌐 URL/Web</button>
+                        <button class="tab active" data-tab="url">🌐 URL</button>
                         <button class="tab" data-tab="text">📝 Text</button>
                         <button class="tab" data-tab="contact">👤 Contact</button>
                         <button class="tab" data-tab="wifi">📶 WiFi</button>
@@ -570,11 +630,37 @@
                             </div>
                         </div>
                         <div class="color-input-group">
-                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Corner Dots</span>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Corners</span>
                             <div class="color-input-wrapper">
                                 <input type="color" id="cornerColor" value="#6366f1">
                                 <span class="color-value" id="cornerColorValue">#6366f1</span>
                             </div>
+                        </div>
+                        <div class="color-input-group">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Frame</span>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="frameColor" value="#000000">
+                                <span class="color-value" id="frameColorValue">#000000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module Style -->
+                <div class="form-group">
+                    <label>Module Style</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="moduleSquare" name="moduleStyle" value="square" checked>
+                            <label for="moduleSquare">Square</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="moduleRounded" name="moduleStyle" value="rounded">
+                            <label for="moduleRounded">Rounded</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="moduleDot" name="moduleStyle" value="dot">
+                            <label for="moduleDot">Dot</label>
                         </div>
                     </div>
                 </div>
@@ -648,9 +734,9 @@
             <div class="footer-content">
                 <div>© zentopia Labs 2025 <span class="footer-separator">|</span> <a href="https://zentopia.io" target="_blank">zentopia.io</a></div>
                 <span class="footer-separator">|</span>
-                <a href="#" id="privacyLink">Adatkezelési Tájékoztató</a>
+                <a href="#" id="privacyLink">Privacy Policy</a>
                 <span class="footer-separator">|</span>
-                <div>Kapcsolat: <span style="unicode-bidi: bidi-override; direction: rtl;">uh.aipotnez@trats</span></div>
+                <div>Contact: <span style="unicode-bidi: bidi-override; direction: rtl;">uh.aipotnez@trats</span></div>
             </div>
         </footer>
     </div>
