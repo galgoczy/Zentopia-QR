@@ -326,16 +326,21 @@
 
         .qr-container {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: var(--border-radius);
             display: inline-block;
             margin: 1.5rem auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 100%;
         }
 
         #qrCanvas {
             display: block;
             margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            width: 350px;
+            height: 350px;
         }
 
         .button-group {
@@ -499,8 +504,8 @@
             }
 
             #qrCanvas {
-                max-width: 100%;
-                height: auto;
+                width: 280px;
+                height: 280px;
             }
 
             h2 {

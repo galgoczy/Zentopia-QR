@@ -270,8 +270,9 @@ class ZentopiaQRGenerator {
                     ctx.fillStyle = isCorner ? this.settings.cornerColor : this.settings.moduleColor;
 
                     // Draw based on module style
-                    if (this.settings.moduleStyle === 'dot') {
-                        // Draw circular modules
+                    // Corner modules always stay square/rounded, never dot
+                    if (this.settings.moduleStyle === 'dot' && !isCorner) {
+                        // Draw circular modules for non-corner elements
                         ctx.beginPath();
                         ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.45, 0, Math.PI * 2);
                         ctx.fill();
@@ -279,7 +280,7 @@ class ZentopiaQRGenerator {
                         // Draw rounded modules
                         this.drawRoundedRect(ctx, x, y, cellSize * 0.9, cellSize * 0.9, cellSize * 0.2, ctx.fillStyle);
                     } else {
-                        // Draw square modules
+                        // Draw square modules (default for corners and square mode)
                         ctx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
                     }
                 }
