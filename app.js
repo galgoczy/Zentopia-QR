@@ -347,13 +347,13 @@ class ZentopiaQRGenerator {
 
         // Draw frame border (if not "none")
         if (this.settings.frameStyle !== 'none') {
-            const frameMargin = 8; // Closer to QR code
+            const frameMargin = 5; // Even closer to QR code
             const frameX = frameMargin;
             const frameY = frameMargin;
             const frameSize = size - frameMargin * 2;
 
             ctx.strokeStyle = this.settings.frameColor;
-            ctx.lineWidth = 24;
+            ctx.lineWidth = 36; // 1.5x thicker (was 24px)
 
             if (this.settings.frameStyle === 'rounded') {
                 this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 30);
@@ -601,11 +601,13 @@ class ZentopiaQRGenerator {
         const captionDisplay = document.getElementById('captionDisplay');
         captionDisplay.textContent = this.settings.caption;
 
-        // Update font size based on caption size
+        // Update font size to match export styling better
         if (this.settings.captionSize === 'large') {
-            captionDisplay.style.fontSize = '2rem';
+            captionDisplay.style.fontSize = '3rem'; // 48px - closer to 64px export
+            captionDisplay.style.fontWeight = 'bold';
         } else {
-            captionDisplay.style.fontSize = '1.125rem';
+            captionDisplay.style.fontSize = '1.5rem'; // 24px - closer to 32px export
+            captionDisplay.style.fontWeight = '600';
         }
     }
 
