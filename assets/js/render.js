@@ -1,11 +1,11 @@
 import { generateQRCodeMatrix } from './qr/encoder.js';
 
-export async function renderPreview(data, customization) {
+export async function renderPreview(data, customization, options = {}) {
   if (!data) {
     return { wrapper: buildEmptyState(customization), canvas: null, matrix: null };
   }
 
-  const matrix = generateQRCodeMatrix(data);
+  const matrix = options.matrix || generateQRCodeMatrix(data);
   const baseSize = 320;
   const scale = Math.min(2, window.devicePixelRatio || 1);
   const { canvas, ctx } = createCanvas(baseSize, scale);

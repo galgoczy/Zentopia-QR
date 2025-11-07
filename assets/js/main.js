@@ -1,6 +1,7 @@
 import { detectLocale, createTranslator, applyTranslations } from './i18n.js';
 import { renderPreview, buildEmptyState } from './render.js';
 import { downloadPng, downloadSvg } from './download.js';
+import { generateMatrix } from './matrix-worker.js';
 
 const DEFAULT_CUSTOMIZATION = {
   codeColor: '#000000',
@@ -200,6 +201,7 @@ function computeQrData() {
 }
 
 async function updatePreview() {
+  const previousData = state.qrData;
   const data = computeQrData();
   state.qrData = data;
   dataOutput.textContent = data || '';
@@ -217,9 +219,22 @@ async function updatePreview() {
     return;
   }
 
+  const customization = { ...state.customization, fillFormText: t('fillFormPrompt') };
+
   try {
-    const customization = { ...state.customization, fillFormText: t('fillFormPrompt') };
-    const result = await renderPreview(data, customization);
+    let matrix = null;
+    if (previousData === data && state.matrix) {
+      matrix = state.matrix;
+    } else {
+      matrix = await generateMatrix(data);
+    }
+
+    if (token !== renderToken) return;
+    if (!matrix) {
+      throw new Error('Matrix generation failed');
+    }
+
+    const result = await renderPreview(data, customization, { matrix });
     if (token !== renderToken) return;
     previewContainer.innerHTML = '';
     previewContainer.append(result.wrapper);
@@ -235,6 +250,8 @@ function resetState() {
   state.contact = { firstName: '', lastName: '', phone: '', email: '', organization: '', website: '' };
   state.wifi = { ssid: '', password: '', security: 'WPA', hidden: false };
   state.customization = { ...DEFAULT_CUSTOMIZATION };
+  state.qrData = '';
+  state.matrix = null;
   document.querySelector('form').reset();
   toggleLogoControls(false);
   requestRender();
