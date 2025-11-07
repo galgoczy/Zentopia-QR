@@ -249,7 +249,7 @@ class ZentopiaQRGenerator {
         const frameSize = size - frameMargin * 2;
 
         ctx.strokeStyle = this.settings.frameColor;
-        ctx.lineWidth = 12;
+        ctx.lineWidth = 24;
 
         if (this.settings.frameStyle === 'rounded') {
             this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 30);
@@ -267,12 +267,14 @@ class ZentopiaQRGenerator {
                     // Check if this is a corner position indicator
                     const isCorner = this.isCornerModule(row, col, moduleCount);
 
-                    ctx.fillStyle = isCorner ? this.settings.cornerColor : this.settings.moduleColor;
+                    // Skip drawing individual modules in corners, we'll draw them as unified blocks
+                    if (isCorner) continue;
+
+                    ctx.fillStyle = this.settings.moduleColor;
 
                     // Draw based on module style
-                    // Corner modules always stay square/rounded, never dot
-                    if (this.settings.moduleStyle === 'dot' && !isCorner) {
-                        // Draw circular modules for non-corner elements
+                    if (this.settings.moduleStyle === 'dot') {
+                        // Draw circular modules
                         ctx.beginPath();
                         ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.45, 0, Math.PI * 2);
                         ctx.fill();
@@ -280,12 +282,15 @@ class ZentopiaQRGenerator {
                         // Draw rounded modules
                         this.drawRoundedRect(ctx, x, y, cellSize * 0.9, cellSize * 0.9, cellSize * 0.2, ctx.fillStyle);
                     } else {
-                        // Draw square modules (default for corners and square mode)
+                        // Draw square modules
                         ctx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
                     }
                 }
             }
         }
+
+        // Draw corner position detection patterns as unified blocks
+        this.drawCornerPatterns(ctx, padding, cellSize, moduleCount);
 
         // Draw logo if present
         if (this.settings.logoImage) {
@@ -307,6 +312,40 @@ class ZentopiaQRGenerator {
         if (row >= moduleCount - cornerSize && col < cornerSize) return true;
 
         return false;
+    }
+
+    drawCornerPatterns(ctx, padding, cellSize, moduleCount) {
+        const cornerSize = 7 * cellSize;
+        const corners = [
+            { x: padding, y: padding }, // Top-left
+            { x: padding + (moduleCount - 7) * cellSize, y: padding }, // Top-right
+            { x: padding, y: padding + (moduleCount - 7) * cellSize } // Bottom-left
+        ];
+
+        corners.forEach(corner => {
+            ctx.fillStyle = this.settings.cornerColor;
+
+            // Outer square (7x7)
+            ctx.fillRect(corner.x, corner.y, cornerSize, cornerSize);
+
+            // Inner white square (5x5, leaving 1 module border)
+            ctx.fillStyle = this.settings.bgColor;
+            ctx.fillRect(
+                corner.x + cellSize,
+                corner.y + cellSize,
+                5 * cellSize,
+                5 * cellSize
+            );
+
+            // Center square (3x3, leaving 1 module white border)
+            ctx.fillStyle = this.settings.cornerColor;
+            ctx.fillRect(
+                corner.x + 2 * cellSize,
+                corner.y + 2 * cellSize,
+                3 * cellSize,
+                3 * cellSize
+            );
+        });
     }
 
     drawRoundedRect(ctx, x, y, width, height, radius, color) {
