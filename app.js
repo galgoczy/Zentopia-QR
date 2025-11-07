@@ -14,7 +14,8 @@ class ZentopiaQRGenerator {
             frameStyle: 'square',
             logoImage: null,
             logoSize: 17,
-            caption: ''
+            caption: '',
+            captionSize: 'small'
         };
 
         this.canvas = document.getElementById('qrCanvas');
@@ -106,7 +107,15 @@ class ZentopiaQRGenerator {
         // Caption
         document.getElementById('captionInput').addEventListener('input', (e) => {
             this.settings.caption = e.target.value;
-            document.getElementById('captionDisplay').textContent = e.target.value;
+            this.updateCaptionDisplay();
+        });
+
+        // Caption size
+        document.querySelectorAll('input[name="captionSize"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.settings.captionSize = e.target.value;
+                this.updateCaptionDisplay();
+            });
         });
 
         // Input fields with debounce for URL
@@ -336,19 +345,21 @@ class ZentopiaQRGenerator {
         ctx.fillStyle = this.settings.bgColor;
         ctx.fillRect(0, 0, size, size);
 
-        // Draw frame border
-        const frameMargin = 20;
-        const frameX = frameMargin;
-        const frameY = frameMargin;
-        const frameSize = size - frameMargin * 2;
+        // Draw frame border (if not "none")
+        if (this.settings.frameStyle !== 'none') {
+            const frameMargin = 8; // Closer to QR code
+            const frameX = frameMargin;
+            const frameY = frameMargin;
+            const frameSize = size - frameMargin * 2;
 
-        ctx.strokeStyle = this.settings.frameColor;
-        ctx.lineWidth = 24;
+            ctx.strokeStyle = this.settings.frameColor;
+            ctx.lineWidth = 24;
 
-        if (this.settings.frameStyle === 'rounded') {
-            this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 30);
-        } else {
-            ctx.strokeRect(frameX, frameY, frameSize, frameSize);
+            if (this.settings.frameStyle === 'rounded') {
+                this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 30);
+            } else {
+                ctx.strokeRect(frameX, frameY, frameSize, frameSize);
+            }
         }
 
         // Draw QR code modules
@@ -370,7 +381,8 @@ class ZentopiaQRGenerator {
                     } else if (this.settings.moduleStyle === 'rounded') {
                         this.drawRoundedRect(ctx, x, y, cellSize * 0.9, cellSize * 0.9, cellSize * 0.2, ctx.fillStyle);
                     } else {
-                        ctx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
+                        // Square modules - seamless, no gaps
+                        ctx.fillRect(x, y, cellSize, cellSize);
                     }
                 }
             }
@@ -401,15 +413,34 @@ class ZentopiaQRGenerator {
             { x: padding, y: padding + (moduleCount - 7) * cellSize }
         ];
 
+        const isRounded = this.settings.frameStyle === 'rounded';
+        const radius = isRounded ? cellSize * 0.5 : 0;
+
         corners.forEach(corner => {
             ctx.fillStyle = this.settings.cornerColor;
-            ctx.fillRect(corner.x, corner.y, cornerSize, cornerSize);
 
+            if (isRounded) {
+                // Outer rounded square
+                this.drawRoundedRect(ctx, corner.x, corner.y, cornerSize, cornerSize, radius, this.settings.cornerColor);
+            } else {
+                ctx.fillRect(corner.x, corner.y, cornerSize, cornerSize);
+            }
+
+            // Inner white square
             ctx.fillStyle = this.settings.bgColor;
-            ctx.fillRect(corner.x + cellSize, corner.y + cellSize, 5 * cellSize, 5 * cellSize);
+            if (isRounded) {
+                this.drawRoundedRect(ctx, corner.x + cellSize, corner.y + cellSize, 5 * cellSize, 5 * cellSize, radius * 0.7, this.settings.bgColor);
+            } else {
+                ctx.fillRect(corner.x + cellSize, corner.y + cellSize, 5 * cellSize, 5 * cellSize);
+            }
 
+            // Center square
             ctx.fillStyle = this.settings.cornerColor;
-            ctx.fillRect(corner.x + 2 * cellSize, corner.y + 2 * cellSize, 3 * cellSize, 3 * cellSize);
+            if (isRounded) {
+                this.drawRoundedRect(ctx, corner.x + 2 * cellSize, corner.y + 2 * cellSize, 3 * cellSize, 3 * cellSize, radius * 0.5, this.settings.cornerColor);
+            } else {
+                ctx.fillRect(corner.x + 2 * cellSize, corner.y + 2 * cellSize, 3 * cellSize, 3 * cellSize);
+            }
         });
     }
 
@@ -487,7 +518,8 @@ class ZentopiaQRGenerator {
 
     downloadPNG() {
         const captionText = this.settings.caption;
-        const captionHeight = captionText ? 80 : 0;
+        const isLarge = this.settings.captionSize === 'large';
+        const captionHeight = captionText ? (isLarge ? 140 : 80) : 0;
         const totalHeight = 900 + captionHeight;
 
         const downloadCanvas = document.createElement('canvas');
@@ -502,7 +534,8 @@ class ZentopiaQRGenerator {
 
         if (captionText) {
             downloadCtx.fillStyle = '#000000';
-            downloadCtx.font = 'bold 32px Arial, sans-serif';
+            const fontSize = isLarge ? 64 : 32;
+            downloadCtx.font = `bold ${fontSize}px Arial, sans-serif`;
             downloadCtx.textAlign = 'center';
             downloadCtx.textBaseline = 'middle';
             downloadCtx.fillText(captionText, 450, 900 + captionHeight / 2);
@@ -523,7 +556,8 @@ class ZentopiaQRGenerator {
     downloadSVG() {
         const size = 900;
         const captionText = this.settings.caption;
-        const captionHeight = captionText ? 80 : 0;
+        const isLarge = this.settings.captionSize === 'large';
+        const captionHeight = captionText ? (isLarge ? 140 : 80) : 0;
         const totalHeight = size + captionHeight;
 
         let svg = `<?xml version="1.0" encoding="UTF-8"?>
@@ -546,7 +580,8 @@ class ZentopiaQRGenerator {
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&apos;');
 
-            svg += `    <text x="${size / 2}" y="${size + captionHeight / 2}" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="#000000">${escapedText}</text>\n`;
+            const fontSize = isLarge ? 64 : 32;
+            svg += `    <text x="${size / 2}" y="${size + captionHeight / 2}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="#000000">${escapedText}</text>\n`;
         }
 
         svg += `</svg>`;
@@ -560,6 +595,18 @@ class ZentopiaQRGenerator {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+
+    updateCaptionDisplay() {
+        const captionDisplay = document.getElementById('captionDisplay');
+        captionDisplay.textContent = this.settings.caption;
+
+        // Update font size based on caption size
+        if (this.settings.captionSize === 'large') {
+            captionDisplay.style.fontSize = '2rem';
+        } else {
+            captionDisplay.style.fontSize = '1.125rem';
+        }
     }
 
     showPrivacyPolicy() {
