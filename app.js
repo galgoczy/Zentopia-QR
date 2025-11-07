@@ -1,5 +1,5 @@
-// QR Code Generator App for zentopia Labs
-// Comprehensive QR code generation with customization
+// QR Code Generator App for zentopia Labs - Modern Version
+// Comprehensive QR code generation with customization and modern UX
 
 class ZentopiaQRGenerator {
     constructor() {
@@ -8,7 +8,7 @@ class ZentopiaQRGenerator {
         this.settings = {
             moduleColor: '#000000',
             bgColor: '#FFFFFF',
-            cornerColor: '#6366f1',
+            cornerColor: '#06b6d4',
             frameColor: '#000000',
             moduleStyle: 'square',
             frameStyle: 'square',
@@ -18,8 +18,11 @@ class ZentopiaQRGenerator {
         };
 
         this.canvas = document.getElementById('qrCanvas');
+        this.heroCanvas = document.getElementById('heroQrCanvas');
         this.ctx = this.canvas.getContext('2d');
+        this.heroCtx = this.heroCanvas.getContext('2d');
         this.qrMatrix = null;
+        this.debounceTimer = null;
 
         this.init();
     }
@@ -27,11 +30,20 @@ class ZentopiaQRGenerator {
     init() {
         this.setupEventListeners();
         this.generateQRCode();
+        this.generateHeroQR();
+    }
+
+    // Debounce function for input
+    debounce(func, wait) {
+        return (...args) => {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => func.apply(this, args), wait);
+        };
     }
 
     setupEventListeners() {
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
+        // Tab switching for QR types
+        document.querySelectorAll('.qr-type-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const tabName = e.target.dataset.tab;
                 this.switchTab(tabName);
@@ -39,28 +51,11 @@ class ZentopiaQRGenerator {
         });
 
         // Color inputs
-        document.getElementById('moduleColor').addEventListener('input', (e) => {
-            this.settings.moduleColor = e.target.value;
-            document.getElementById('moduleColorValue').textContent = e.target.value;
-            this.generateQRCode();
-        });
-
-        document.getElementById('bgColor').addEventListener('input', (e) => {
-            this.settings.bgColor = e.target.value;
-            document.getElementById('bgColorValue').textContent = e.target.value;
-            this.generateQRCode();
-        });
-
-        document.getElementById('cornerColor').addEventListener('input', (e) => {
-            this.settings.cornerColor = e.target.value;
-            document.getElementById('cornerColorValue').textContent = e.target.value;
-            this.generateQRCode();
-        });
-
-        document.getElementById('frameColor').addEventListener('input', (e) => {
-            this.settings.frameColor = e.target.value;
-            document.getElementById('frameColorValue').textContent = e.target.value;
-            this.generateQRCode();
+        ['moduleColor', 'bgColor', 'cornerColor', 'frameColor'].forEach(colorId => {
+            document.getElementById(colorId).addEventListener('input', () => {
+                this.settings[colorId] = document.getElementById(colorId).value;
+                this.generateQRCode();
+            });
         });
 
         // Module style
@@ -89,6 +84,9 @@ class ZentopiaQRGenerator {
                     const img = new Image();
                     img.onload = () => {
                         this.settings.logoImage = img;
+                        // Show logo preview
+                        document.getElementById('logoPreview').classList.remove('hidden');
+                        document.getElementById('logoPreviewImg').src = event.target.result;
                         this.generateQRCode();
                     };
                     img.src = event.target.result;
@@ -111,13 +109,15 @@ class ZentopiaQRGenerator {
             document.getElementById('captionDisplay').textContent = e.target.value;
         });
 
-        // Generate button
-        document.getElementById('generateBtn').addEventListener('click', () => {
-            this.generateQRCode();
-        });
+        // Input fields with debounce for URL
+        const debouncedGenerate = this.debounce(() => {
+            this.validateAndGenerate();
+        }, 300);
 
-        // Input fields - auto generate on change
-        const autoGenFields = ['urlInput', 'textInput', 'contactName', 'contactEmail',
+        document.getElementById('urlInput').addEventListener('input', debouncedGenerate);
+
+        // Other input fields - auto generate
+        const autoGenFields = ['textInput', 'contactName', 'contactEmail',
                                'contactPhone', 'contactOrg', 'wifiSsid', 'wifiPassword', 'wifiSecurity'];
         autoGenFields.forEach(id => {
             const element = document.getElementById(id);
@@ -126,33 +126,63 @@ class ZentopiaQRGenerator {
             }
         });
 
+        // Generate button
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            this.validateAndGenerate();
+        });
+
         // Download buttons
         document.getElementById('downloadPng').addEventListener('click', () => this.downloadPNG());
         document.getElementById('downloadSvg').addEventListener('click', () => this.downloadSVG());
 
-        // Privacy policy modal
+        // Privacy policy
         document.getElementById('privacyLink').addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Privacy Policy\n\n' +
-                  'The zentopia Labs QR code generator does not collect or store personal data. ' +
-                  'All QR code generation happens in your browser, data is not transmitted to any server. ' +
-                  'We use Google Analytics to collect anonymous usage statistics to improve the service.\n\n' +
-                  'zentopia Labs © 2025');
+            this.showPrivacyPolicy();
         });
+    }
+
+    validateAndGenerate() {
+        // Validate URL if on URL tab
+        if (this.currentTab === 'url') {
+            const urlInput = document.getElementById('urlInput');
+            const urlError = document.getElementById('urlError');
+            const url = urlInput.value.trim();
+
+            if (url && !this.isValidURL(url)) {
+                urlError.classList.remove('hidden');
+                urlInput.classList.add('border-red-500');
+                return;
+            } else {
+                urlError.classList.add('hidden');
+                urlInput.classList.remove('border-red-500');
+            }
+        }
+
+        this.generateQRCode();
+    }
+
+    isValidURL(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
     }
 
     switchTab(tabName) {
         // Update active tab button
-        document.querySelectorAll('.tab').forEach(tab => {
+        document.querySelectorAll('.qr-type-tab').forEach(tab => {
             tab.classList.remove('active');
         });
         event.target.classList.add('active');
 
         // Update active tab content
         document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
+            content.classList.add('hidden');
         });
-        document.getElementById(`${tabName}-tab`).classList.add('active');
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
 
         this.currentTab = tabName;
         this.generateQRCode();
@@ -199,14 +229,46 @@ class ZentopiaQRGenerator {
         return data;
     }
 
+    showLoading(show) {
+        const btnText = document.getElementById('generateBtnText');
+        const btnLoading = document.getElementById('generateBtnLoading');
+
+        if (show) {
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+        } else {
+            btnText.classList.remove('hidden');
+            btnLoading.classList.add('hidden');
+        }
+    }
+
+    enableDownload(enable) {
+        const pngBtn = document.getElementById('downloadPng');
+        const svgBtn = document.getElementById('downloadSvg');
+        const successMsg = document.getElementById('successMessage');
+
+        if (enable) {
+            pngBtn.disabled = false;
+            svgBtn.disabled = false;
+            successMsg.classList.remove('hidden');
+        } else {
+            pngBtn.disabled = true;
+            svgBtn.disabled = true;
+            successMsg.classList.add('hidden');
+        }
+    }
+
     generateQRCode() {
         this.qrData = this.getQRData();
 
         if (!this.qrData) {
+            this.enableDownload(false);
             return;
         }
 
         try {
+            this.showLoading(true);
+
             // Use qrcode-generator library
             const typeNumber = 0; // Auto-detect
             const errorCorrectionLevel = 'H'; // High error correction for logo support
@@ -215,26 +277,57 @@ class ZentopiaQRGenerator {
             qr.make();
 
             this.qrMatrix = qr;
-            this.drawCustomQR();
+            this.drawCustomQR(this.canvas, this.ctx);
+
+            setTimeout(() => {
+                this.showLoading(false);
+                this.enableDownload(true);
+            }, 200);
         } catch (error) {
             console.error('Error generating QR code:', error);
+            this.showLoading(false);
+            this.enableDownload(false);
         }
     }
 
-    drawCustomQR() {
+    generateHeroQR() {
+        try {
+            const qr = qrcode(0, 'H');
+            qr.addData('https://qrcode.zentopia.io');
+            qr.make();
+
+            const moduleCount = qr.getModuleCount();
+            const cellSize = 300 / moduleCount;
+
+            this.heroCtx.fillStyle = '#FFFFFF';
+            this.heroCtx.fillRect(0, 0, 300, 300);
+
+            for (let row = 0; row < moduleCount; row++) {
+                for (let col = 0; col < moduleCount; col++) {
+                    if (qr.isDark(row, col)) {
+                        const x = col * cellSize;
+                        const y = row * cellSize;
+                        this.heroCtx.fillStyle = '#06b6d4';
+                        this.heroCtx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error generating hero QR:', error);
+        }
+    }
+
+    drawCustomQR(canvas, ctx) {
         if (!this.qrMatrix) return;
 
         const moduleCount = this.qrMatrix.getModuleCount();
-        const size = 900; // High quality output
-        const frameBorder = 40; // Border for the frame
+        const size = 900;
         const padding = 80;
         const qrSize = size - padding * 2;
         const cellSize = qrSize / moduleCount;
 
-        this.canvas.width = size;
-        this.canvas.height = size;
-
-        const ctx = this.ctx;
+        canvas.width = size;
+        canvas.height = size;
 
         // Clear canvas
         ctx.clearRect(0, 0, size, size);
@@ -243,7 +336,7 @@ class ZentopiaQRGenerator {
         ctx.fillStyle = this.settings.bgColor;
         ctx.fillRect(0, 0, size, size);
 
-        // Draw frame border around QR code
+        // Draw frame border
         const frameMargin = 20;
         const frameX = frameMargin;
         const frameY = frameMargin;
@@ -265,32 +358,25 @@ class ZentopiaQRGenerator {
                     const x = padding + col * cellSize;
                     const y = padding + row * cellSize;
 
-                    // Check if this is a corner position indicator
                     const isCorner = this.isCornerModule(row, col, moduleCount);
-
-                    // Skip drawing individual modules in corners, we'll draw them as unified blocks
                     if (isCorner) continue;
 
                     ctx.fillStyle = this.settings.moduleColor;
 
-                    // Draw based on module style
                     if (this.settings.moduleStyle === 'dot') {
-                        // Draw circular modules
                         ctx.beginPath();
                         ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.45, 0, Math.PI * 2);
                         ctx.fill();
                     } else if (this.settings.moduleStyle === 'rounded') {
-                        // Draw rounded modules
                         this.drawRoundedRect(ctx, x, y, cellSize * 0.9, cellSize * 0.9, cellSize * 0.2, ctx.fillStyle);
                     } else {
-                        // Draw square modules
                         ctx.fillRect(x, y, cellSize * 0.95, cellSize * 0.95);
                     }
                 }
             }
         }
 
-        // Draw corner position detection patterns as unified blocks
+        // Draw corner patterns
         this.drawCornerPatterns(ctx, padding, cellSize, moduleCount);
 
         // Draw logo if present
@@ -300,52 +386,30 @@ class ZentopiaQRGenerator {
     }
 
     isCornerModule(row, col, moduleCount) {
-        // Position detection patterns are in three corners
         const cornerSize = 7;
-
-        // Top-left corner
         if (row < cornerSize && col < cornerSize) return true;
-
-        // Top-right corner
         if (row < cornerSize && col >= moduleCount - cornerSize) return true;
-
-        // Bottom-left corner
         if (row >= moduleCount - cornerSize && col < cornerSize) return true;
-
         return false;
     }
 
     drawCornerPatterns(ctx, padding, cellSize, moduleCount) {
         const cornerSize = 7 * cellSize;
         const corners = [
-            { x: padding, y: padding }, // Top-left
-            { x: padding + (moduleCount - 7) * cellSize, y: padding }, // Top-right
-            { x: padding, y: padding + (moduleCount - 7) * cellSize } // Bottom-left
+            { x: padding, y: padding },
+            { x: padding + (moduleCount - 7) * cellSize, y: padding },
+            { x: padding, y: padding + (moduleCount - 7) * cellSize }
         ];
 
         corners.forEach(corner => {
             ctx.fillStyle = this.settings.cornerColor;
-
-            // Outer square (7x7)
             ctx.fillRect(corner.x, corner.y, cornerSize, cornerSize);
 
-            // Inner white square (5x5, leaving 1 module border)
             ctx.fillStyle = this.settings.bgColor;
-            ctx.fillRect(
-                corner.x + cellSize,
-                corner.y + cellSize,
-                5 * cellSize,
-                5 * cellSize
-            );
+            ctx.fillRect(corner.x + cellSize, corner.y + cellSize, 5 * cellSize, 5 * cellSize);
 
-            // Center square (3x3, leaving 1 module white border)
             ctx.fillStyle = this.settings.cornerColor;
-            ctx.fillRect(
-                corner.x + 2 * cellSize,
-                corner.y + 2 * cellSize,
-                3 * cellSize,
-                3 * cellSize
-            );
+            ctx.fillRect(corner.x + 2 * cellSize, corner.y + 2 * cellSize, 3 * cellSize, 3 * cellSize);
         });
     }
 
@@ -385,26 +449,21 @@ class ZentopiaQRGenerator {
         const x = (canvasSize - logoSize) / 2;
         const y = (canvasSize - logoSize) / 2;
 
-        // Calculate which modules to clear for the logo
         const centerModule = Math.floor(moduleCount / 2);
         const logoModuleSize = Math.ceil(logoSize / cellSize / 2);
 
-        // Clear the modules where the logo will be
         ctx.fillStyle = this.settings.bgColor;
         const clearSize = logoModuleSize * 2 * cellSize + cellSize;
         const clearX = canvasPadding + (centerModule - logoModuleSize) * cellSize;
         const clearY = canvasPadding + (centerModule - logoModuleSize) * cellSize;
 
         if (this.settings.moduleStyle === 'rounded' || this.settings.moduleStyle === 'dot') {
-            this.drawRoundedRect(ctx, clearX - 10, clearY - 10,
-                                clearSize + 20, clearSize + 20, 20, this.settings.bgColor);
+            this.drawRoundedRect(ctx, clearX - 10, clearY - 10, clearSize + 20, clearSize + 20, 20, this.settings.bgColor);
         } else {
             ctx.fillRect(clearX - 10, clearY - 10, clearSize + 20, clearSize + 20);
         }
 
-        // Draw logo
         if (this.settings.moduleStyle === 'rounded' || this.settings.moduleStyle === 'dot') {
-            // Clip to rounded rectangle
             ctx.save();
             ctx.beginPath();
             const logoRadius = 15;
@@ -427,7 +486,6 @@ class ZentopiaQRGenerator {
     }
 
     downloadPNG() {
-        // Create high-res version with caption
         const captionText = this.settings.caption;
         const captionHeight = captionText ? 80 : 0;
         const totalHeight = 900 + captionHeight;
@@ -437,14 +495,11 @@ class ZentopiaQRGenerator {
         downloadCanvas.height = totalHeight;
         const downloadCtx = downloadCanvas.getContext('2d');
 
-        // Fill background
         downloadCtx.fillStyle = this.settings.bgColor;
         downloadCtx.fillRect(0, 0, 900, totalHeight);
 
-        // Copy current QR canvas
         downloadCtx.drawImage(this.canvas, 0, 0);
 
-        // Draw caption if exists
         if (captionText) {
             downloadCtx.fillStyle = '#000000';
             downloadCtx.font = 'bold 32px Arial, sans-serif';
@@ -453,7 +508,6 @@ class ZentopiaQRGenerator {
             downloadCtx.fillText(captionText, 450, 900 + captionHeight / 2);
         }
 
-        // Convert to blob and download
         downloadCanvas.toBlob((blob) => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -467,7 +521,6 @@ class ZentopiaQRGenerator {
     }
 
     downloadSVG() {
-        // Generate SVG representation
         const size = 900;
         const captionText = this.settings.caption;
         const captionHeight = captionText ? 80 : 0;
@@ -482,15 +535,10 @@ class ZentopiaQRGenerator {
     </defs>
 `;
 
-        // Background
         svg += `    <rect width="${size}" height="${totalHeight}" fill="${this.settings.bgColor}"/>\n`;
-
-        // QR Code
         svg += `    <rect x="0" y="0" width="${size}" height="${size}" fill="url(#qrPattern)"/>\n`;
 
-        // Caption
         if (captionText) {
-            // Escape XML special characters
             const escapedText = captionText
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -503,7 +551,6 @@ class ZentopiaQRGenerator {
 
         svg += `</svg>`;
 
-        // Download SVG
         const blob = new Blob([svg], { type: 'image/svg+xml' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -513,6 +560,14 @@ class ZentopiaQRGenerator {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+
+    showPrivacyPolicy() {
+        alert('Privacy Policy\n\n' +
+              'The zentopia Labs QR code generator does not collect or store personal data. ' +
+              'All QR code generation happens in your browser, data is not transmitted to any server. ' +
+              'We use Google Analytics to collect anonymous usage statistics to improve the service.\n\n' +
+              'zentopia Labs © 2025');
     }
 }
 

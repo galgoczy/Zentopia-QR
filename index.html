@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Professional QR Code Generator by zentopia Labs</title>
-    <meta name="description" content="Professional, free QR code generator with customizable colors, logo, and multiple formats.">
+    <title>Generate Beautiful QR Codes in Seconds | zentopia Labs</title>
+    <meta name="description" content="Create stunning, customizable QR codes instantly. Free professional QR code generator with colors, logos, and high-quality export options.">
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3JP6WRKKX"></script>
@@ -15,750 +15,518 @@
         gtag('config', 'G-E3JP6WRKKX');
     </script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        :root {
-            --primary-color: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary-color: #8b5cf6;
-            --accent-color: #ec4899;
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --surface-light: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border-radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#06b6d4',
+                        secondary: '#6366f1',
+                    }
+                }
+            }
         }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-color) 0%, #1e1b4b 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-        }
-
-        h1 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .logo-text {
-            display: inline-block;
-        }
-
-        .logo-text .qr-text {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .logo-text .by-text {
-            color: var(--text-secondary);
-            font-size: 0.6em;
-            font-weight: 500;
-        }
-
-        .logo-text .zentopia-text {
-            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
             }
-
-            .container {
-                padding: 1rem;
-            }
-
-            header {
-                margin-bottom: 2rem;
-                padding: 1rem 0;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        .card {
-            background: var(--surface-color);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.4);
-        }
-
-        .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        input[type="text"],
-        input[type="url"],
-        input[type="email"],
-        input[type="tel"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--surface-light);
-            border: 2px solid transparent;
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background: var(--bg-color);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 0.75rem 1.5rem;
-            background: var(--surface-light);
-            border: none;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .tab:hover {
-            background: var(--primary-dark);
-            color: var(--text-primary);
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-        }
-
-        .color-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .color-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem;
-            background: var(--surface-light);
-            border-radius: 8px;
-        }
-
-        input[type="color"] {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-
-        input[type="color"]::-webkit-color-swatch {
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-        }
-
-        .color-value {
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .radio-option {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .radio-option input[type="radio"] {
-            display: none;
-        }
-
-        .radio-option label {
-            display: block;
-            padding: 0.75rem 1rem;
-            background: var(--surface-light);
-            border: 2px solid transparent;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .radio-option input[type="radio"]:checked + label {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-btn {
-            padding: 0.75rem 1.5rem;
-            background: var(--surface-light);
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            text-align: center;
-            transition: var(--transition);
-            display: block;
-            width: 100%;
-        }
-
-        .file-input-btn:hover {
-            border-color: var(--primary-color);
-            background: var(--bg-color);
-        }
-
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .preview-section {
-            text-align: center;
-        }
-
-        .qr-container {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            display: inline-block;
-            margin: 1.5rem auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 100%;
+        .mesh-gradient {
+            background: linear-gradient(135deg, #ecfeff 0%, #f3e8ff 100%);
         }
 
         #qrCanvas {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
-            width: 350px;
-            height: 350px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.875rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--surface-light);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Adsense Placeholder - Hidden */
-        .ad-placeholder {
-            display: none;
-            background: var(--surface-color);
-            border: 2px dashed rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            text-align: center;
-            color: var(--text-secondary);
-            margin: 2rem 0;
-        }
-
-        footer {
-            margin-top: 4rem;
-            padding: 2rem 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .footer-content a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-content a:hover {
-            color: var(--primary-color);
-        }
-
-        .footer-separator {
-            color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Range slider styling */
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: var(--surface-light);
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-            border: none;
-        }
-
-        .range-value {
-            display: inline-block;
-            min-width: 40px;
-            text-align: right;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .range-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        @media (max-width: 640px) {
-            .card {
-                padding: 1.25rem;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .color-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                gap: 0.35rem;
-            }
-
-            .tab {
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
-                flex: 1;
-                min-width: auto;
-            }
-
-            .qr-container {
-                padding: 1rem;
-                max-width: 100%;
-            }
-
-            #qrCanvas {
-                width: 280px;
-                height: 280px;
-            }
-
-            h2 {
-                font-size: 1.25rem;
-            }
-
-            .radio-option {
-                min-width: 90px;
-            }
-
-            .radio-option label {
-                padding: 0.6rem 0.75rem;
-                font-size: 0.85rem;
-            }
+            image-rendering: crisp-edges;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1><span class="logo-text"><span class="qr-text">QR Code Generator</span> <span class="by-text">by</span> <span class="zentopia-text">zentopia</span></span></h1>
-            <p class="subtitle">Create stunning, customizable QR codes in seconds</p>
-        </header>
+<body class="bg-gray-50">
 
-        <!-- Adsense Placeholder (Hidden) -->
-        <div class="ad-placeholder">
-            <p>Advertisement Space</p>
-        </div>
-
-        <div class="main-content">
-            <!-- Left Panel - Controls -->
-            <div class="card">
-                <h2>QR Code Settings</h2>
-
-                <!-- Type Selection -->
-                <div class="form-group">
-                    <label>QR Code Type</label>
-                    <div class="tabs">
-                        <button class="tab active" data-tab="url">🌐 URL</button>
-                        <button class="tab" data-tab="text">📝 Text</button>
-                        <button class="tab" data-tab="contact">👤 Contact</button>
-                        <button class="tab" data-tab="wifi">📶 WiFi</button>
-                    </div>
+    <!-- Sticky Top Banner Ad -->
+    <div id="top-banner-ad" class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div class="relative flex items-center justify-center py-2 px-4">
+            <span class="absolute top-1 left-4 text-xs text-gray-400">Advertisement</span>
+            <div class="flex items-center justify-center">
+                <!-- Desktop: 728x90 -->
+                <div class="hidden md:flex items-center justify-center" style="width: 728px; height: 90px; background-color: #f3f4f6;">
+                    <span class="text-gray-400 text-sm">Ad Space 728x90</span>
                 </div>
-
-                <!-- URL Tab -->
-                <div id="url-tab" class="tab-content active">
-                    <div class="form-group">
-                        <label for="urlInput">Website URL</label>
-                        <input type="url" id="urlInput" placeholder="https://example.com" value="https://zentopia.io">
-                    </div>
+                <!-- Mobile: 320x50 -->
+                <div class="flex md:hidden items-center justify-center" style="width: 320px; height: 50px; background-color: #f3f4f6;">
+                    <span class="text-gray-400 text-xs">Ad Space 320x50</span>
                 </div>
-
-                <!-- Text Tab -->
-                <div id="text-tab" class="tab-content">
-                    <div class="form-group">
-                        <label for="textInput">Text Content</label>
-                        <textarea id="textInput" placeholder="Enter your text here..."></textarea>
-                    </div>
-                </div>
-
-                <!-- Contact Tab -->
-                <div id="contact-tab" class="tab-content">
-                    <div class="form-group">
-                        <label for="contactName">Name</label>
-                        <input type="text" id="contactName" placeholder="John Doe">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactEmail">Email</label>
-                        <input type="email" id="contactEmail" placeholder="john@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactPhone">Phone</label>
-                        <input type="tel" id="contactPhone" placeholder="+36 30 123 4567">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactOrg">Organization</label>
-                        <input type="text" id="contactOrg" placeholder="Company Name">
-                    </div>
-                </div>
-
-                <!-- WiFi Tab -->
-                <div id="wifi-tab" class="tab-content">
-                    <div class="form-group">
-                        <label for="wifiSsid">Network Name (SSID)</label>
-                        <input type="text" id="wifiSsid" placeholder="MyWiFi">
-                    </div>
-                    <div class="form-group">
-                        <label for="wifiPassword">Password</label>
-                        <input type="text" id="wifiPassword" placeholder="password123">
-                    </div>
-                    <div class="form-group">
-                        <label for="wifiSecurity">Security Type</label>
-                        <select id="wifiSecurity">
-                            <option value="WPA">WPA/WPA2</option>
-                            <option value="WEP">WEP</option>
-                            <option value="nopass">None</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Caption -->
-                <div class="form-group">
-                    <label for="captionInput">Caption (optional)</label>
-                    <input type="text" id="captionInput" placeholder="Scan me!">
-                </div>
-
-                <!-- Customization -->
-                <h2 style="margin-top: 2rem;">Customization</h2>
-
-                <!-- Colors -->
-                <div class="form-group">
-                    <label>Colors</label>
-                    <div class="color-grid">
-                        <div class="color-input-group">
-                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Modules</span>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="moduleColor" value="#000000">
-                                <span class="color-value" id="moduleColorValue">#000000</span>
-                            </div>
-                        </div>
-                        <div class="color-input-group">
-                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Background</span>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="bgColor" value="#FFFFFF">
-                                <span class="color-value" id="bgColorValue">#FFFFFF</span>
-                            </div>
-                        </div>
-                        <div class="color-input-group">
-                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Corners</span>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="cornerColor" value="#6366f1">
-                                <span class="color-value" id="cornerColorValue">#6366f1</span>
-                            </div>
-                        </div>
-                        <div class="color-input-group">
-                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Frame</span>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="frameColor" value="#000000">
-                                <span class="color-value" id="frameColorValue">#000000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Module Style -->
-                <div class="form-group">
-                    <label>Module Style</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="moduleSquare" name="moduleStyle" value="square" checked>
-                            <label for="moduleSquare">Square</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="moduleRounded" name="moduleStyle" value="rounded">
-                            <label for="moduleRounded">Rounded</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="moduleDot" name="moduleStyle" value="dot">
-                            <label for="moduleDot">Dot</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Frame Style -->
-                <div class="form-group">
-                    <label>Frame Style</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="frameSquare" name="frameStyle" value="square" checked>
-                            <label for="frameSquare">Square</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="frameRounded" name="frameStyle" value="rounded">
-                            <label for="frameRounded">Rounded</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Logo Upload -->
-                <div class="form-group">
-                    <label>Logo (optional)</label>
-                    <div class="file-input-wrapper">
-                        <label for="logoUpload" class="file-input-btn">
-                            📁 Choose Logo Image
-                            <span id="logoFileName" style="display: block; font-size: 0.85rem; margin-top: 0.25rem;"></span>
-                        </label>
-                        <input type="file" id="logoUpload" accept="image/*">
-                    </div>
-                </div>
-
-                <!-- Logo Size -->
-                <div class="form-group">
-                    <label>Logo Size</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="logoSmall" name="logoSize" value="11">
-                            <label for="logoSmall">Small</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="logoMedium" name="logoSize" value="17" checked>
-                            <label for="logoMedium">Medium</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="logoLarge" name="logoSize" value="22">
-                            <label for="logoLarge">Large</label>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary" id="generateBtn" style="width: 100%; margin-top: 1rem;">
-                    ✨ Generate QR Code
-                </button>
             </div>
+            <button onclick="document.getElementById('top-banner-ad').style.display='none'" class="absolute top-2 right-4 text-gray-400 hover:text-gray-900 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
 
-            <!-- Right Panel - Preview -->
-            <div class="card preview-section">
-                <h2>Preview</h2>
-                <div class="qr-container">
-                    <canvas id="qrCanvas" width="400" height="400"></canvas>
-                    <div id="captionDisplay" style="margin-top: 1rem; font-size: 1.1rem; color: #000; font-weight: 500;"></div>
+    <!-- Hero Section -->
+    <section class="mesh-gradient py-16 md:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-500 to-purple-600 bg-clip-text text-transparent mb-6">
+                        Generate Beautiful QR Codes in Seconds
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-8">
+                        Create stunning, fully customizable QR codes with colors, logos, and high-quality export options. Free, fast, and professional.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#generator" class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                            Get Started
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                        <span class="text-sm text-gray-500 self-center">
+                            <span id="stats-counter" class="font-bold text-cyan-600">1,234,567</span> QR codes generated
+                        </span>
+                    </div>
                 </div>
-
-                <div class="button-group">
-                    <button class="btn btn-primary" id="downloadPng">
-                        ⬇️ Download PNG
-                    </button>
-                    <button class="btn btn-secondary" id="downloadSvg">
-                        ⬇️ Download SVG
-                    </button>
+                <div class="flex justify-center">
+                    <div class="bg-white p-8 rounded-2xl shadow-2xl animate-fade-in">
+                        <canvas id="heroQrCanvas" width="300" height="300" class="w-full max-w-xs mx-auto"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Adsense Placeholder (Hidden) -->
-        <div class="ad-placeholder">
-            <p>Advertisement Space</p>
-        </div>
+    <!-- Main Generator Section -->
+    <section id="generator" class="py-16 md:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-        <footer>
-            <div class="footer-content">
-                <div>© zentopia Labs 2025 <span class="footer-separator">|</span> <a href="https://zentopia.io" target="_blank">zentopia.io</a></div>
-                <span class="footer-separator">|</span>
-                <a href="#" id="privacyLink">Privacy Policy</a>
-                <span class="footer-separator">|</span>
-                <div>Contact: <span style="unicode-bidi: bidi-override; direction: rtl;">uh.aipotnez@trats</span></div>
+                <!-- Left Column: Input Controls -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Customize Your QR Code</h2>
+
+                        <!-- QR Type Tabs -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">QR Code Type</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <button class="qr-type-tab active px-4 py-3 rounded-lg font-medium transition-all duration-200" data-tab="url">
+                                    🌐 URL
+                                </button>
+                                <button class="qr-type-tab px-4 py-3 rounded-lg font-medium transition-all duration-200" data-tab="text">
+                                    📝 Text
+                                </button>
+                                <button class="qr-type-tab px-4 py-3 rounded-lg font-medium transition-all duration-200" data-tab="contact">
+                                    👤 Contact
+                                </button>
+                                <button class="qr-type-tab px-4 py-3 rounded-lg font-medium transition-all duration-200" data-tab="wifi">
+                                    📶 WiFi
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- URL Tab -->
+                        <div id="url-tab" class="tab-content">
+                            <div class="mb-6">
+                                <label for="urlInput" class="block text-sm font-semibold text-gray-700 mb-2">Website URL</label>
+                                <input type="url" id="urlInput" placeholder="https://zentopia.io" value="https://zentopia.io"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                <p id="urlError" class="mt-2 text-sm text-red-600 hidden">Please enter a valid URL</p>
+                            </div>
+                        </div>
+
+                        <!-- Text Tab -->
+                        <div id="text-tab" class="tab-content hidden">
+                            <div class="mb-6">
+                                <label for="textInput" class="block text-sm font-semibold text-gray-700 mb-2">Text Content</label>
+                                <textarea id="textInput" rows="4" placeholder="Enter your text here..."
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Contact Tab -->
+                        <div id="contact-tab" class="tab-content hidden">
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label for="contactName" class="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                                    <input type="text" id="contactName" placeholder="John Doe"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                </div>
+                                <div>
+                                    <label for="contactEmail" class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                                    <input type="email" id="contactEmail" placeholder="john@example.com"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                </div>
+                                <div>
+                                    <label for="contactPhone" class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                                    <input type="tel" id="contactPhone" placeholder="+36 30 123 4567"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                </div>
+                                <div>
+                                    <label for="contactOrg" class="block text-sm font-semibold text-gray-700 mb-2">Organization</label>
+                                    <input type="text" id="contactOrg" placeholder="Company Name"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WiFi Tab -->
+                        <div id="wifi-tab" class="tab-content hidden">
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label for="wifiSsid" class="block text-sm font-semibold text-gray-700 mb-2">Network Name (SSID)</label>
+                                    <input type="text" id="wifiSsid" placeholder="MyWiFi"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                </div>
+                                <div>
+                                    <label for="wifiPassword" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                    <input type="text" id="wifiPassword" placeholder="password123"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                </div>
+                                <div>
+                                    <label for="wifiSecurity" class="block text-sm font-semibold text-gray-700 mb-2">Security Type</label>
+                                    <select id="wifiSecurity"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                                        <option value="WPA">WPA/WPA2</option>
+                                        <option value="WEP">WEP</option>
+                                        <option value="nopass">None</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customization Options -->
+                        <div class="border-t pt-6 mt-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Design Options</h3>
+
+                            <!-- Colors -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <div>
+                                    <label for="moduleColor" class="block text-sm font-medium text-gray-700 mb-2">Foreground</label>
+                                    <input type="color" id="moduleColor" value="#000000" class="w-full h-12 rounded-lg cursor-pointer border-2 border-gray-200">
+                                </div>
+                                <div>
+                                    <label for="bgColor" class="block text-sm font-medium text-gray-700 mb-2">Background</label>
+                                    <input type="color" id="bgColor" value="#FFFFFF" class="w-full h-12 rounded-lg cursor-pointer border-2 border-gray-200">
+                                </div>
+                                <div>
+                                    <label for="cornerColor" class="block text-sm font-medium text-gray-700 mb-2">Corners</label>
+                                    <input type="color" id="cornerColor" value="#06b6d4" class="w-full h-12 rounded-lg cursor-pointer border-2 border-gray-200">
+                                </div>
+                                <div>
+                                    <label for="frameColor" class="block text-sm font-medium text-gray-700 mb-2">Frame</label>
+                                    <input type="color" id="frameColor" value="#000000" class="w-full h-12 rounded-lg cursor-pointer border-2 border-gray-200">
+                                </div>
+                            </div>
+
+                            <!-- Module Style -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">Module Style</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="moduleStyle" value="square" checked class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Square</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="moduleStyle" value="rounded" class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Rounded</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="moduleStyle" value="dot" class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Dot</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Frame Style -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">Frame Style</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="frameStyle" value="square" checked class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Square</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="frameStyle" value="rounded" class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Rounded</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Logo Upload -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Logo to Center</label>
+                                <input type="file" id="logoUpload" accept="image/*" class="hidden">
+                                <button onclick="document.getElementById('logoUpload').click()"
+                                    class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-cyan-500 transition-colors duration-200 text-gray-600 hover:text-cyan-600 font-medium">
+                                    📁 Choose Logo Image
+                                </button>
+                                <p id="logoFileName" class="mt-2 text-sm text-gray-500"></p>
+                                <div id="logoPreview" class="mt-3 hidden">
+                                    <img id="logoPreviewImg" class="w-20 h-20 object-contain border-2 border-gray-200 rounded-lg" alt="Logo preview">
+                                </div>
+                            </div>
+
+                            <!-- Logo Size -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">Logo Size</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="logoSize" value="11" class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Small</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="logoSize" value="17" checked class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Medium</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="logoSize" value="22" class="peer sr-only">
+                                        <div class="px-4 py-3 text-center rounded-lg border-2 border-gray-200 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 transition-all duration-200">
+                                            <span class="font-medium">Large</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Caption -->
+                            <div class="mb-6">
+                                <label for="captionInput" class="block text-sm font-semibold text-gray-700 mb-2">Caption (optional)</label>
+                                <input type="text" id="captionInput" placeholder="Scan me!"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200">
+                            </div>
+
+                            <!-- Generate Button -->
+                            <button id="generateBtn"
+                                class="w-full px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                                <span id="generateBtnText">✨ Generate QR Code</span>
+                                <span id="generateBtnLoading" class="hidden">
+                                    <svg class="animate-spin inline h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Generating...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Preview & Download -->
+                <div class="lg:col-span-5">
+                    <!-- Desktop Sidebar Ad -->
+                    <div id="sidebar-ad" class="hidden lg:block mb-8 sticky top-24">
+                        <div class="bg-gray-50 rounded-xl shadow-md p-4">
+                            <p class="text-xs text-gray-400 text-center mb-2">Advertisement</p>
+                            <div class="flex items-center justify-center bg-gray-100 rounded-lg" style="width: 100%; height: 250px;">
+                                <span class="text-gray-400 text-sm">Ad Space 300x250</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow-xl rounded-2xl p-6 sticky top-24">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Preview</h2>
+
+                        <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                            <canvas id="qrCanvas" width="900" height="900" class="w-full max-w-sm mx-auto animate-fade-in"></canvas>
+                            <div id="captionDisplay" class="mt-4 text-center font-semibold text-lg text-gray-800"></div>
+                        </div>
+
+                        <div id="successMessage" class="hidden mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <p class="text-green-800 text-sm text-center flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Ready to download!
+                            </p>
+                        </div>
+
+                        <!-- Download Buttons -->
+                        <div class="space-y-3">
+                            <button id="downloadPng" disabled
+                                class="w-full px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl hover:brightness-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg disabled:hover:brightness-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download PNG
+                            </button>
+                            <button id="downloadSvg" disabled
+                                class="w-full px-6 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-300 disabled:hover:bg-white flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download SVG
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </footer>
+        </div>
+    </section>
+
+    <!-- In-Content Ad -->
+    <div id="content-ad" class="max-w-4xl mx-auto my-16 px-4">
+        <div class="bg-gray-50 rounded-lg shadow-sm p-6">
+            <p class="text-xs text-gray-400 text-center mb-3">Advertisement</p>
+            <div class="flex items-center justify-center">
+                <!-- Desktop: 728x90 -->
+                <div class="hidden md:flex items-center justify-center bg-gray-100 rounded-lg" style="width: 728px; height: 90px;">
+                    <span class="text-gray-400 text-sm">Ad Space 728x90</span>
+                </div>
+                <!-- Mobile: 320x100 -->
+                <div class="flex md:hidden items-center justify-center bg-gray-100 rounded-lg" style="width: 320px; height: 100px;">
+                    <span class="text-gray-400 text-xs">Ad Space 320x100</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="py-16 md:py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Why Choose Our QR Generator</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow duration-300">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Lightning Fast</h3>
+                    <p class="text-gray-600">Generate QR codes instantly with our optimized rendering engine</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow duration-300">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Fully Customizable</h3>
+                    <p class="text-gray-600">Colors, size, shapes, and logo options for complete branding control</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow duration-300">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">High Quality</h3>
+                    <p class="text-gray-600">Print-ready resolution up to 900x900px for professional results</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-3">
+                        QR Code Generator
+                    </h3>
+                    <p class="text-gray-400 text-sm">
+                        Professional, free QR code generator by zentopia Labs. Create beautiful, customizable QR codes in seconds.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#generator" class="hover:text-cyan-400 transition-colors">Generator</a></li>
+                        <li><a href="#" id="privacyLink" class="hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="https://zentopia.io" target="_blank" class="hover:text-cyan-400 transition-colors">zentopia.io</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Contact</h4>
+                    <p class="text-gray-400 text-sm">
+                        Email: <span style="unicode-bidi: bidi-override; direction: rtl;">uh.aipotnez@trats</span>
+                    </p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center">
+                <p class="text-gray-400 text-sm">
+                    © 2025 zentopia Labs. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Anchor Ad (Bottom Fixed) -->
+    <div id="mobile-anchor-ad" class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg block md:hidden">
+        <div class="relative flex items-center justify-center py-2 px-4">
+            <span class="absolute top-1 left-4 text-xs text-gray-400">Advertisement</span>
+            <div class="flex items-center justify-center" style="width: 320px; height: 50px; background-color: #f3f4f6;">
+                <span class="text-gray-400 text-xs">Ad Space 320x50</span>
+            </div>
+            <button onclick="document.getElementById('mobile-anchor-ad').style.display='none'" class="absolute top-2 right-4 text-gray-400 hover:text-gray-900 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- QR Code Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-
     <script src="app.js"></script>
+
+    <style>
+        .qr-type-tab {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        .qr-type-tab:hover {
+            background-color: #e5e7eb;
+        }
+        .qr-type-tab.active {
+            background: linear-gradient(135deg, #06b6d4, #6366f1);
+            color: white;
+        }
+    </style>
 </body>
 </html>
