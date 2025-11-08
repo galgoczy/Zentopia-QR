@@ -353,15 +353,18 @@ class ZentopiaQRGenerator {
             const frameY = frameMargin;
             const frameSize = size - frameMargin * 2;
 
-            ctx.strokeStyle = this.settings.frameColor;
-            ctx.lineWidth = frameThickness;
+            ctx.fillStyle = this.settings.frameColor;
 
             if (this.settings.frameStyle === 'rounded') {
-                // Beautifully rounded frame with smooth corners
+                // Draw rounded frame with uniform radius on both inner and outer edges
                 const cornerRadius = 60;
-                this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, cornerRadius);
+                this.drawRoundedFrame(ctx, frameX, frameY, frameSize, frameSize, cornerRadius, frameThickness);
             } else {
-                ctx.strokeRect(frameX, frameY, frameSize, frameSize);
+                // Square frame - draw outer and inner rectangles
+                ctx.fillRect(frameX, frameY, frameSize, frameThickness); // Top
+                ctx.fillRect(frameX, frameY + frameSize - frameThickness, frameSize, frameThickness); // Bottom
+                ctx.fillRect(frameX, frameY, frameThickness, frameSize); // Left
+                ctx.fillRect(frameX + frameSize - frameThickness, frameY, frameThickness, frameSize); // Right
             }
         }
 
@@ -463,32 +466,43 @@ class ZentopiaQRGenerator {
         ctx.fill();
     }
 
-    drawRoundedRectStroke(ctx, x, y, width, height, radius) {
-        // Draw rounded rectangle frame using arc() for perfect circular corners
+    drawRoundedFrame(ctx, x, y, width, height, radius, thickness) {
+        // Draw frame with uniform corner radius on both inner and outer edges
         ctx.save();
 
+        // Outer rectangle with rounded corners
         ctx.beginPath();
-        // Start from top-left corner (after the radius)
         ctx.moveTo(x + radius, y);
-        // Top edge to top-right corner
         ctx.lineTo(x + width - radius, y);
-        // Top-right corner (arc from 270° to 0°)
         ctx.arc(x + width - radius, y + radius, radius, -Math.PI / 2, 0);
-        // Right edge to bottom-right corner
         ctx.lineTo(x + width, y + height - radius);
-        // Bottom-right corner (arc from 0° to 90°)
         ctx.arc(x + width - radius, y + height - radius, radius, 0, Math.PI / 2);
-        // Bottom edge to bottom-left corner
         ctx.lineTo(x + radius, y + height);
-        // Bottom-left corner (arc from 90° to 180°)
         ctx.arc(x + radius, y + height - radius, radius, Math.PI / 2, Math.PI);
-        // Left edge to top-left corner
         ctx.lineTo(x, y + radius);
-        // Top-left corner (arc from 180° to 270°)
         ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5);
         ctx.closePath();
 
-        ctx.stroke();
+        // Inner rectangle with same corner radius (but smaller dimensions)
+        const innerX = x + thickness;
+        const innerY = y + thickness;
+        const innerWidth = width - thickness * 2;
+        const innerHeight = height - thickness * 2;
+        const innerRadius = Math.max(0, radius - thickness);
+
+        ctx.moveTo(innerX + innerRadius, innerY);
+        ctx.lineTo(innerX + innerWidth - innerRadius, innerY);
+        ctx.arc(innerX + innerWidth - innerRadius, innerY + innerRadius, innerRadius, -Math.PI / 2, 0, false);
+        ctx.lineTo(innerX + innerWidth, innerY + innerHeight - innerRadius);
+        ctx.arc(innerX + innerWidth - innerRadius, innerY + innerHeight - innerRadius, innerRadius, 0, Math.PI / 2, false);
+        ctx.lineTo(innerX + innerRadius, innerY + innerHeight);
+        ctx.arc(innerX + innerRadius, innerY + innerHeight - innerRadius, innerRadius, Math.PI / 2, Math.PI, false);
+        ctx.lineTo(innerX, innerY + innerRadius);
+        ctx.arc(innerX + innerRadius, innerY + innerRadius, innerRadius, Math.PI, Math.PI * 1.5, false);
+        ctx.closePath();
+
+        // Fill using evenodd rule to create the frame
+        ctx.fill('evenodd');
         ctx.restore();
     }
 
