@@ -356,8 +356,8 @@ class ZentopiaQRGenerator {
             ctx.lineWidth = 36; // 1.5x thicker (was 24px)
 
             if (this.settings.frameStyle === 'rounded') {
-                // Larger radius for more visible rounded corners
-                this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 50);
+                // Large radius for beautifully rounded corners
+                this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 80);
             } else {
                 ctx.strokeRect(frameX, frameY, frameSize, frameSize);
             }
