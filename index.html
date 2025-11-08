@@ -486,6 +486,106 @@
         </div>
     </section>
 
+    <!-- User Feedback Section -->
+    <section class="bg-gradient-to-br from-purple-50 to-cyan-50 py-16 lg:py-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Help Us Build the Best QR Generator
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    We're on a mission to create the world's best QR code generator. Know what's missing? We'd love to hear your ideas!
+                </p>
+            </div>
+
+            <!-- Feedback Form Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <!-- Success Message -->
+                <div id="feedbackSuccess" class="hidden bg-green-50 border-l-4 border-green-500 text-green-800 p-4 rounded-lg mb-6 animate-fade-in">
+                    ✓ Thank you! Your feedback helps us improve.
+                </div>
+
+                <!-- Error Message -->
+                <div id="feedbackError" class="hidden bg-red-50 border-l-4 border-red-500 text-red-800 p-4 rounded-lg mb-6 animate-fade-in">
+                    Oops! Something went wrong. Please try again.
+                </div>
+
+                <form id="feedbackForm">
+                    <!-- Feedback Textarea -->
+                    <div class="mb-6">
+                        <label for="feedbackText" class="block text-sm font-medium text-gray-700 mb-2">
+                            What feature or improvement would make this the perfect QR generator for you?
+                        </label>
+                        <textarea
+                            id="feedbackText"
+                            maxlength="500"
+                            class="w-full min-h-[150px] px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 focus:outline-none resize-none transition-all"
+                            placeholder="Example: I wish I could add custom frames around the QR code, or save my favorite color schemes..."
+                        ></textarea>
+                        <div id="charCounter" class="text-xs text-right mt-1 text-gray-400">
+                            0 / 500 characters
+                        </div>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="mb-6">
+                        <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email (optional - if you'd like us to follow up)
+                        </label>
+                        <input
+                            type="email"
+                            id="feedbackEmail"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 focus:outline-none transition-all"
+                            placeholder="your@email.com"
+                        >
+                    </div>
+
+                    <!-- Category Selection -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            What area?
+                        </label>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" class="feedback-category px-4 py-2 rounded-full border-2 border-gray-300 text-gray-600 bg-white hover:border-cyan-400 transition-colors cursor-pointer" data-category="Design & Customization">
+                                Design & Customization
+                            </button>
+                            <button type="button" class="feedback-category px-4 py-2 rounded-full border-2 border-gray-300 text-gray-600 bg-white hover:border-cyan-400 transition-colors cursor-pointer" data-category="New Features">
+                                New Features
+                            </button>
+                            <button type="button" class="feedback-category px-4 py-2 rounded-full border-2 border-gray-300 text-gray-600 bg-white hover:border-cyan-400 transition-colors cursor-pointer" data-category="Performance">
+                                Performance
+                            </button>
+                            <button type="button" class="feedback-category px-4 py-2 rounded-full border-2 border-gray-300 text-gray-600 bg-white hover:border-cyan-400 transition-colors cursor-pointer" data-category="Bug Report">
+                                Bug Report
+                            </button>
+                            <button type="button" class="feedback-category px-4 py-2 rounded-full border-2 border-gray-300 text-gray-600 bg-white hover:border-cyan-400 transition-colors cursor-pointer" data-category="Other">
+                                Other
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        type="submit"
+                        id="feedbackSubmit"
+                        class="w-full mt-8 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                        disabled
+                    >
+                        <svg id="feedbackSendIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        <svg id="feedbackSpinner" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span id="feedbackSubmitText">Send Feedback</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
