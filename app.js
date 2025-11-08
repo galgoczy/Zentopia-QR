@@ -348,7 +348,7 @@ class ZentopiaQRGenerator {
         // Draw frame border (if not "none")
         if (this.settings.frameStyle !== 'none') {
             const frameMargin = 5;
-            const frameThickness = 43; // 20% thicker than before (36px * 1.2)
+            const frameThickness = 34; // Optimized thickness (20% thinner from 43px)
             const frameX = frameMargin;
             const frameY = frameMargin;
             const frameSize = size - frameMargin * 2;
