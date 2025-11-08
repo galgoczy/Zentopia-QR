@@ -462,6 +462,10 @@ class ZentopiaQRGenerator {
     }
 
     drawRoundedRectStroke(ctx, x, y, width, height, radius) {
+        // Set line join and cap for smooth rounded corners on both sides
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
         ctx.lineTo(x + width - radius, y);
@@ -474,6 +478,10 @@ class ZentopiaQRGenerator {
         ctx.quadraticCurveTo(x, y, x + radius, y);
         ctx.closePath();
         ctx.stroke();
+
+        // Reset to defaults
+        ctx.lineJoin = 'miter';
+        ctx.lineCap = 'butt';
     }
 
     drawLogo(ctx, canvasSize, moduleCount, cellSize, canvasPadding) {

@@ -2,9 +2,37 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Beautiful QR Codes in Seconds | zentopia Labs</title>
-    <meta name="description" content="Create stunning, customizable QR codes instantly. Free professional QR code generator with colors, logos, and high-quality export options.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Free QR Code Generator - Create Custom QR Codes Online | Zentopia</title>
+    <meta name="title" content="Free QR Code Generator - Create Custom QR Codes Online | Zentopia">
+    <meta name="description" content="Generate beautiful, customizable QR codes for free. Customize colors, add logos, choose sizes. Download as PNG, SVG, or PDF. No registration required.">
+    <meta name="keywords" content="QR code generator, free QR code, custom QR code, QR code maker, online QR generator, QR code creator, QR code with logo, business QR code">
+    <meta name="author" content="Zentopia">
+    <link rel="canonical" href="https://qrcode.zentopia.io/">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#06b6d4">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://qrcode.zentopia.io/">
+    <meta property="og:title" content="Free QR Code Generator - Create Custom QR Codes Online">
+    <meta property="og:description" content="Generate beautiful, customizable QR codes for free. Customize colors, add logos, choose sizes. Download as PNG, SVG, or PDF.">
+    <meta property="og:image" content="https://qrcode.zentopia.io/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://qrcode.zentopia.io/">
+    <meta property="twitter:title" content="Free QR Code Generator - Create Custom QR Codes Online">
+    <meta property="twitter:description" content="Generate beautiful, customizable QR codes for free. Customize colors, add logos, choose sizes.">
+    <meta property="twitter:image" content="https://qrcode.zentopia.io/twitter-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3JP6WRKKX"></script>
@@ -95,26 +123,40 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="text-center lg:text-left">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-500 to-purple-600 bg-clip-text text-transparent mb-6">
-                        Generate Beautiful QR Codes in Seconds
+                        Free QR Code Generator - Create Custom QR Codes Online
                     </h1>
                     <p class="text-lg md:text-xl text-gray-600 mb-8">
-                        Create stunning, fully customizable QR codes with colors, logos, and high-quality export options. Free, fast, and professional.
+                        Create stunning, customizable QR codes in seconds. No registration required. 100% free. No watermarks.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#generator" class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                            Get Started
-                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
+
+                    <!-- Use cases -->
+                    <p class="text-sm text-gray-600 mb-6">
+                        Perfect for business cards, marketing materials, websites, product packaging, and more
+                    </p>
+
+                    <!-- CTA buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+                        <a href="#generator" class="inline-flex items-center justify-center px-8 py-3 text-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                            Create Your QR Code Now
                         </a>
-                        <span class="text-sm text-gray-500 self-center">
-                            <span id="stats-counter" class="font-bold text-cyan-600">1,234,567</span> QR codes generated
-                        </span>
+                        <a href="#feedback" class="inline-flex items-center justify-center px-8 py-3 text-lg font-semibold border-2 border-gray-300 text-gray-700 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition-all duration-300">
+                            💡 Got Ideas? Share Them!
+                        </a>
+                    </div>
+
+                    <!-- Trust signals / Social proof -->
+                    <div class="text-center lg:text-left py-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-500 font-medium mb-2">
+                            ⭐⭐⭐⭐⭐ Trusted by thousands of users worldwide
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            🔒 No registration required • 100% Free • No watermarks • Instant download
+                        </p>
                     </div>
                 </div>
                 <div class="flex justify-center">
                     <div class="bg-white p-8 rounded-2xl shadow-2xl animate-fade-in">
-                        <canvas id="heroQrCanvas" width="300" height="300" class="w-full max-w-xs mx-auto"></canvas>
+                        <canvas id="heroQrCanvas" width="300" height="300" class="w-full max-w-xs mx-auto" alt="Example QR code preview"></canvas>
                     </div>
                 </div>
             </div>
@@ -124,6 +166,15 @@
     <!-- Main Generator Section -->
     <section id="generator" class="py-16 md:py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Extra SEO Content -->
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <p class="text-sm text-gray-600">
+                    Generate high-quality QR codes for free with our easy-to-use online tool.
+                    Customize colors, add your logo, and download in multiple formats (PNG, SVG, PDF).
+                    Perfect for business cards, restaurant menus, product labels, event tickets, and more.
+                </p>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
                 <!-- Left Column: Input Controls -->
@@ -445,14 +496,14 @@
     </div>
 
     <!-- Features Section -->
-    <section class="py-16 md:py-20 bg-white">
+    <section id="features" class="py-16 md:py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Why Choose Our QR Generator</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow duration-300">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 rounded-full mb-4">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 rounded-full mb-4" aria-hidden="true">
                         <svg class="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
@@ -463,7 +514,7 @@
 
                 <!-- Feature 2 -->
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow duration-300">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4" aria-hidden="true">
                         <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
                         </svg>
@@ -474,7 +525,7 @@
 
                 <!-- Feature 3 -->
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow duration-300">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-4">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-4" aria-hidden="true">
                         <svg class="w-8 h-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
                         </svg>
@@ -487,7 +538,7 @@
     </section>
 
     <!-- User Feedback Section -->
-    <section class="bg-gradient-to-br from-purple-50 to-cyan-50 py-16 lg:py-20">
+    <section id="feedback" class="bg-gradient-to-br from-purple-50 to-cyan-50 py-16 lg:py-20">
         <div class="max-w-4xl mx-auto px-4">
             <!-- Header -->
             <div class="text-center mb-12">
@@ -587,35 +638,51 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Main footer content -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+
+                <!-- Column 1: About -->
                 <div>
-                    <h3 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-3">
-                        QR Code Generator
-                    </h3>
-                    <p class="text-gray-400 text-sm">
-                        Professional, free QR code generator by zentopia Labs. Create beautiful, customizable QR codes in seconds.
+                    <h3 class="text-lg font-semibold mb-4">QR Code Generator</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Create beautiful, customizable QR codes for free. No registration required. Perfect for businesses, marketing, and personal use.
                     </p>
                 </div>
+
+                <!-- Column 2: Quick Links -->
                 <div>
-                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#generator" class="hover:text-cyan-400 transition-colors">Generator</a></li>
-                        <li><a href="#" id="privacyLink" class="hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
-                        <li><a href="https://zentopia.io" target="_blank" class="hover:text-cyan-400 transition-colors">zentopia.io</a></li>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#generator" class="text-gray-400 hover:text-white transition-colors">QR Generator</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#feedback" class="text-gray-400 hover:text-white transition-colors">Share Your Ideas</a></li>
+                        <li><a href="https://zentopia.io" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors">Zentopia</a></li>
                     </ul>
                 </div>
+
+                <!-- Column 3: Legal & Contact -->
                 <div>
-                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Contact</h4>
-                    <p class="text-gray-400 text-sm">
-                        Email: <span style="unicode-bidi: bidi-override; direction: rtl;">oi.aipotnez@rq</span>
-                    </p>
+                    <h3 class="text-lg font-semibold mb-4">Legal & Support</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" id="privacyLink" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+                        <li>
+                            <span class="text-gray-400">Contact: </span>
+                            <span class="text-gray-400" style="unicode-bidi: bidi-override; direction: rtl;">oi.aipotnez@rq</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-6 text-center">
-                <p class="text-gray-400 text-sm">
-                    © 2025 zentopia Labs. All rights reserved.
+
+            <!-- Bottom bar -->
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-gray-400">
+                    © 2025 Zentopia QR Code Generator. All rights reserved.
+                </p>
+                <p class="text-xs text-gray-500">
+                    Free QR Code Generator • No Registration Required • 100% Free Forever
                 </p>
             </div>
         </div>
@@ -639,6 +706,30 @@
     <!-- QR Code Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <script src="app.js"></script>
+
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Free QR Code Generator by Zentopia",
+      "description": "Generate beautiful, customizable QR codes for free with our online tool. No registration required.",
+      "url": "https://qrcode.zentopia.io",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "Zentopia",
+        "url": "https://zentopia.io"
+      },
+      "featureList": "Custom colors, Logo upload, Multiple formats (PNG, SVG, PDF), High resolution, Free forever"
+    }
+    </script>
 
     <style>
         .qr-type-tab {
