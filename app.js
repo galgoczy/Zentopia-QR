@@ -347,17 +347,19 @@ class ZentopiaQRGenerator {
 
         // Draw frame border (if not "none")
         if (this.settings.frameStyle !== 'none') {
-            const frameMargin = 5; // Even closer to QR code
+            const frameMargin = 5;
+            const frameThickness = 43; // 20% thicker than before (36px * 1.2)
             const frameX = frameMargin;
             const frameY = frameMargin;
             const frameSize = size - frameMargin * 2;
 
             ctx.strokeStyle = this.settings.frameColor;
-            ctx.lineWidth = 36; // 1.5x thicker (was 24px)
+            ctx.lineWidth = frameThickness;
 
             if (this.settings.frameStyle === 'rounded') {
-                // Large radius for beautifully rounded corners
-                this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, 80);
+                // Beautifully rounded frame with smooth corners
+                const cornerRadius = 60;
+                this.drawRoundedRectStroke(ctx, frameX, frameY, frameSize, frameSize, cornerRadius);
             } else {
                 ctx.strokeRect(frameX, frameY, frameSize, frameSize);
             }
@@ -462,26 +464,32 @@ class ZentopiaQRGenerator {
     }
 
     drawRoundedRectStroke(ctx, x, y, width, height, radius) {
-        // Set line join and cap for smooth rounded corners on both sides
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
+        // Draw rounded rectangle frame using arc() for perfect circular corners
+        ctx.save();
 
         ctx.beginPath();
+        // Start from top-left corner (after the radius)
         ctx.moveTo(x + radius, y);
+        // Top edge to top-right corner
         ctx.lineTo(x + width - radius, y);
-        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        // Top-right corner (arc from 270° to 0°)
+        ctx.arc(x + width - radius, y + radius, radius, -Math.PI / 2, 0);
+        // Right edge to bottom-right corner
         ctx.lineTo(x + width, y + height - radius);
-        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        // Bottom-right corner (arc from 0° to 90°)
+        ctx.arc(x + width - radius, y + height - radius, radius, 0, Math.PI / 2);
+        // Bottom edge to bottom-left corner
         ctx.lineTo(x + radius, y + height);
-        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        // Bottom-left corner (arc from 90° to 180°)
+        ctx.arc(x + radius, y + height - radius, radius, Math.PI / 2, Math.PI);
+        // Left edge to top-left corner
         ctx.lineTo(x, y + radius);
-        ctx.quadraticCurveTo(x, y, x + radius, y);
+        // Top-left corner (arc from 180° to 270°)
+        ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5);
         ctx.closePath();
-        ctx.stroke();
 
-        // Reset to defaults
-        ctx.lineJoin = 'miter';
-        ctx.lineCap = 'butt';
+        ctx.stroke();
+        ctx.restore();
     }
 
     drawLogo(ctx, canvasSize, moduleCount, cellSize, canvasPadding) {
