@@ -676,6 +676,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function initFeedbackForm() {
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-Y2DjuaRLXLTsQqOeu5ZUHZgSxjCv5A1nGqU_ZSnN3Ms3H30yCo4IBTn2lL8x6QvNFA/exec';
 
+    // Bot protection - store form load time
+    const formLoadTime = Date.now();
+
     // State
     let selectedCategory = '';
 
@@ -747,6 +750,43 @@ function initFeedbackForm() {
         const feedback = feedbackText.value.trim();
         const email = feedbackEmail.value.trim();
 
+        // ========================================
+        // BOT PROTECTION CHECKS
+        // ========================================
+
+        // 1. Honeypot check - if the hidden field is filled, it's a bot
+        const honeypot = document.getElementById('feedbackWebsite');
+        if (honeypot && honeypot.value.length > 0) {
+            console.log('Bot detected: honeypot filled');
+            // Silent fail - don't tell the bot it was caught
+            return;
+        }
+
+        // 2. Rate limiting - max 1 submission per minute per user
+        const RATE_LIMIT_MS = 60000; // 1 minute
+        const lastSubmit = localStorage.getItem('lastFeedbackSubmit');
+        if (lastSubmit) {
+            const timeSinceLastSubmit = Date.now() - parseInt(lastSubmit);
+            if (timeSinceLastSubmit < RATE_LIMIT_MS) {
+                const waitSeconds = Math.ceil((RATE_LIMIT_MS - timeSinceLastSubmit) / 1000);
+                alert(`Please wait ${waitSeconds} seconds before submitting again.`);
+                return;
+            }
+        }
+
+        // 3. Timestamp validation - minimum 3 seconds to fill the form
+        const MIN_FILL_TIME = 3000; // 3 seconds
+        const fillTime = Date.now() - formLoadTime;
+        if (fillTime < MIN_FILL_TIME) {
+            console.log('Bot detected: form filled too quickly');
+            // Silent fail - don't tell the bot it was caught
+            return;
+        }
+
+        // ========================================
+        // REGULAR VALIDATION
+        // ========================================
+
         // Validation
         if (feedback.length < 10) {
             alert('Please write at least 10 characters');
@@ -792,6 +832,9 @@ function initFeedbackForm() {
 
             // Success (no-cors mode doesn't allow reading response)
             successMsg.classList.remove('hidden');
+
+            // Update rate limit timestamp
+            localStorage.setItem('lastFeedbackSubmit', Date.now().toString());
 
             // Reset form
             feedbackText.value = '';

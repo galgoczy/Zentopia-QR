@@ -582,6 +582,11 @@
                 </div>
 
                 <form id="feedbackForm">
+                    <!-- Honeypot field (hidden from humans, visible to bots) -->
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                        <input type="text" name="website" id="feedbackWebsite" tabindex="-1" autocomplete="off" placeholder="Your website">
+                    </div>
+
                     <!-- Feedback Textarea -->
                     <div class="mb-6">
                         <label for="feedbackText" class="block text-sm font-medium text-gray-700 mb-2">
