@@ -676,6 +676,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function initFeedbackForm() {
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-Y2DjuaRLXLTsQqOeu5ZUHZgSxjCv5A1nGqU_ZSnN3Ms3H30yCo4IBTn2lL8x6QvNFA/exec';
 
+    // reCAPTCHA site key - PRODUCTION: Replace with your own key
+    const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
     // Bot protection - store form load time
     const formLoadTime = Date.now();
 
@@ -815,6 +818,22 @@ function initFeedbackForm() {
         submitText.textContent = 'Sending...';
 
         try {
+            // ========================================
+            // RECAPTCHA V3 - Generate token
+            // ========================================
+            let recaptchaToken = null;
+            if (typeof grecaptcha !== 'undefined') {
+                try {
+                    recaptchaToken = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'feedback_submit' });
+                    console.log('reCAPTCHA token generated successfully');
+                } catch (recaptchaError) {
+                    console.error('reCAPTCHA error:', recaptchaError);
+                    // Continue without reCAPTCHA if it fails (graceful degradation)
+                }
+            } else {
+                console.warn('reCAPTCHA not loaded, continuing without it');
+            }
+
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors', // Required for Google Apps Script
@@ -826,7 +845,8 @@ function initFeedbackForm() {
                     email: email || 'Not provided',
                     category: selectedCategory || 'Not specified',
                     userAgent: navigator.userAgent,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    recaptchaToken: recaptchaToken || 'not_available'
                 })
             });
 
