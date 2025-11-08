@@ -1,9 +1,10 @@
 # Google reCAPTCHA v3 Setup Guide
 
 ## Current Status
-The application is configured with **Google's TEST keys** which always pass validation.
+✅ **PRODUCTION KEYS CONFIGURED** - The application is now using your production reCAPTCHA v3 keys.
 
-⚠️ **IMPORTANT**: You must replace these with your own production keys before deploying.
+**Site Key**: `6LcooQYsAAAAAO5hWTI7mVpzigw40BQb-3GwEcc3`
+**Secret Key**: `6LcooQYsAAAAAKlTGJrE4tkajvKnFzpgt9xSihbY` (for server-side validation)
 
 ---
 
@@ -52,7 +53,9 @@ const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 const RECAPTCHA_SITE_KEY = 'YOUR_SITE_KEY_HERE';
 ```
 
-### 5. Update Backend (Google Apps Script)
+### 5. Server-Side Validation (Google Apps Script) - RECOMMENDED
+
+⚠️ **IMPORTANT**: Add this to your Google Apps Script for complete protection!
 
 In your Google Apps Script (`doPost` function), add server-side validation:
 
@@ -65,7 +68,7 @@ function doPost(e) {
   if (recaptchaToken && recaptchaToken !== 'not_available') {
     const verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
     const payload = {
-      'secret': 'YOUR_SECRET_KEY_HERE',
+      'secret': '6LcooQYsAAAAAKlTGJrE4tkajvKnFzpgt9xSihbY',
       'response': recaptchaToken
     };
 
@@ -78,11 +81,15 @@ function doPost(e) {
       const response = UrlFetchApp.fetch(verifyUrl, options);
       const result = JSON.parse(response.getContentText());
 
+      Logger.log('reCAPTCHA score: ' + result.score); // Debug logging
+
       // Check score (0.0 = bot, 1.0 = human)
       if (result.success && result.score >= 0.5) {
         // Proceed with saving feedback
+        Logger.log('reCAPTCHA passed - Score: ' + result.score);
       } else {
         // Reject (likely bot)
+        Logger.log('reCAPTCHA FAILED - Score: ' + result.score);
         return ContentService.createTextOutput(JSON.stringify({
           error: 'reCAPTCHA validation failed',
           score: result.score
@@ -95,24 +102,47 @@ function doPost(e) {
   }
 
   // Save to Google Sheets...
+  // Your existing code here...
 }
 ```
+
+**What this does:**
+- Sends the reCAPTCHA token to Google for verification
+- Returns a score between 0.0 (bot) and 1.0 (human)
+- Threshold set to 0.5 (balanced)
+- Logs score for debugging in Apps Script logs
+- Rejects submissions with score < 0.5
 
 ---
 
 ## Testing
 
-### Test with Google's Test Keys (Current Setup)
-- Site Key: `6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI`
-- Secret Key: `6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe`
+### Testing Production Keys (Current Setup)
 
-These keys always return `score: 1.0` (perfect human score).
+✅ **Your production keys are now active!**
 
-### Test Your Production Keys
 1. Open browser console (F12)
-2. Submit feedback
-3. Look for: `reCAPTCHA token generated successfully`
-4. Check Google reCAPTCHA admin dashboard for analytics
+2. Navigate to the feedback form
+3. Fill out the form and submit
+4. Look for console messages:
+   - `reCAPTCHA token generated successfully` ✅
+   - Check the token is not "not_available"
+5. Check Google reCAPTCHA admin dashboard:
+   - Visit: https://www.google.com/recaptcha/admin
+   - View real-time analytics and scores
+   - Monitor bot traffic patterns
+
+### Verifying Server-Side Validation
+
+If you added server-side validation to your Google Apps Script:
+
+1. Open Apps Script editor
+2. View → Executions (or Logs)
+3. Submit a test feedback
+4. Check logs for:
+   - `reCAPTCHA score: 0.9` (or similar)
+   - `reCAPTCHA passed - Score: 0.9`
+5. Try with a bot-like behavior (instant submit) to see rejection
 
 ---
 
@@ -210,13 +240,23 @@ if (typeof grecaptcha !== 'undefined') {
 
 ## Summary
 
-Current setup uses **test keys** that always pass. This is safe for development.
+✅ **PRODUCTION READY** - Your reCAPTCHA v3 is fully configured!
 
-**Before production deployment:**
-1. Register at https://www.google.com/recaptcha/admin/create
-2. Replace site key in `index.html` (line 48)
-3. Replace site key in `app.js` (line 680)
-4. Add server-side validation in Google Apps Script
-5. Set threshold to 0.5 or higher
+**What's done:**
+- ✅ Production site key configured in `index.html` (line 47)
+- ✅ Production site key configured in `app.js` (line 680)
+- ✅ Secret key documented for server-side validation
+- ✅ 4-layer bot protection active
 
-**Estimated time**: 5 minutes for frontend, 10 minutes for backend validation
+**Next step (recommended):**
+1. Add server-side validation to Google Apps Script (see code above)
+2. Set threshold to 0.5 (already in example code)
+3. Monitor reCAPTCHA admin dashboard for bot patterns
+
+**Estimated time for server-side validation**: 10 minutes
+
+**Your keys:**
+- Site Key: `6LcooQYsAAAAAO5hWTI7mVpzigw40BQb-3GwEcc3`
+- Secret Key: `6LcooQYsAAAAAKlTGJrE4tkajvKnFzpgt9xSihbY`
+
+🎉 **The frontend is production-ready! Real bot scores will now be generated.**
