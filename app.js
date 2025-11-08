@@ -12,6 +12,7 @@ class ZentopiaQRGenerator {
             frameColor: '#000000',
             moduleStyle: 'square',
             frameStyle: 'square',
+            frameThickness: 'thick',
             logoImage: null,
             logoSize: 17,
             caption: '',
@@ -71,6 +72,14 @@ class ZentopiaQRGenerator {
         document.querySelectorAll('input[name="frameStyle"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 this.settings.frameStyle = e.target.value;
+                this.generateQRCode();
+            });
+        });
+
+        // Frame thickness
+        document.querySelectorAll('input[name="frameThickness"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.settings.frameThickness = e.target.value;
                 this.generateQRCode();
             });
         });
@@ -348,7 +357,8 @@ class ZentopiaQRGenerator {
         // Draw frame border (if not "none")
         if (this.settings.frameStyle !== 'none') {
             const frameMargin = 5;
-            const frameThickness = 34; // Optimized thickness (20% thinner from 43px)
+            // Frame thickness based on user selection
+            const frameThickness = this.settings.frameThickness === 'thin' ? 25 : 34;
             const frameX = frameMargin;
             const frameY = frameMargin;
             const frameSize = size - frameMargin * 2;
