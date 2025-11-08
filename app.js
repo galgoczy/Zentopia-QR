@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ========================================
 
 function initFeedbackForm() {
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-Y2DjuaRLXLTsQqOeu5ZUHZgSxjCv5A1nGqU_ZSnN3Ms3H30yCo4IBTn2lL8x6QvNFA/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXHjOzObnZ43pnGwG5NIHSuC40OP83wb2CG8-Pq95SsCdMK3VckqiqLk0usCJBbjHA6w/exec';
 
     // reCAPTCHA site key - PRODUCTION
     const RECAPTCHA_SITE_KEY = '6LcooQYsAAAAAO5hWTI7mVpzigw40BQb-3GwEcc3';
