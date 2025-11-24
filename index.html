@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-app-locale="{{APP_LOCALE}}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zentopia Labs • QR Code Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__content">
+        <div class="hero__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" focusable="false">
+            <path d="M3 3h8v8H3zM5 5v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zm-2 8h4v2h-2v2h-2zm6 0h4v6h-6v-4h2zm2 4v-2h-2v2zm-6 0v4h-6v-6h4v2zm-4 0v2h2v-2z" />
+          </svg>
+        </div>
+        <div>
+          <p class="hero__eyebrow" data-i18n="appSubtitle">Zentopia Labs</p>
+          <h1 class="hero__title" data-i18n="appTitle">QR Code Studio</h1>
+          <p class="hero__description" data-i18n="appDescription">
+            Generate pixel-perfect QR codes for links, notes, contact cards, and WiFi in seconds.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel panel--form">
+        <div class="tabs" role="tablist">
+          <button class="tabs__button tabs__button--active" data-tab="url" role="tab" aria-selected="true">
+            <span class="tabs__icon" aria-hidden="true">🔗</span>
+            <span data-i18n="urlTab">URL</span>
+          </button>
+          <button class="tabs__button" data-tab="text" role="tab" aria-selected="false">
+            <span class="tabs__icon" aria-hidden="true">💬</span>
+            <span data-i18n="textTab">Text</span>
+          </button>
+          <button class="tabs__button" data-tab="contact" role="tab" aria-selected="false">
+            <span class="tabs__icon" aria-hidden="true">👤</span>
+            <span data-i18n="contactTab">Contact</span>
+          </button>
+          <button class="tabs__button" data-tab="wifi" role="tab" aria-selected="false">
+            <span class="tabs__icon" aria-hidden="true">📶</span>
+            <span data-i18n="wifiTab">WiFi</span>
+          </button>
+        </div>
+
+        <form class="form" autocomplete="off" novalidate>
+          <div class="form__group" data-view="url">
+            <label class="form__label" for="url-input" data-i18n="websiteUrl">Website URL</label>
+            <input id="url-input" name="url" type="url" class="form__input" placeholder="https://example.com" data-i18n-placeholder="urlPlaceholder" />
+            <p class="form__hint" data-i18n="urlHelp">If you leave the protocol out we will add https:// for you.</p>
+          </div>
+
+          <div class="form__group form__group--hidden" data-view="text">
+            <label class="form__label" for="text-input" data-i18n="textContent">Text Content</label>
+            <textarea id="text-input" name="text" rows="4" class="form__input form__input--multiline" placeholder="Type anything here..." data-i18n-placeholder="textPlaceholder"></textarea>
+          </div>
+
+          <div class="form__group form__group--hidden" data-view="contact">
+            <fieldset class="form__fieldset">
+              <legend data-i18n="contactInformation">Contact Information</legend>
+              <div class="form__row">
+                <label class="form__label" for="first-name" data-i18n="firstName">First Name</label>
+                <input id="first-name" name="firstName" type="text" class="form__input" placeholder="John" data-i18n-placeholder="firstNamePlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="last-name" data-i18n="lastName">Last Name</label>
+                <input id="last-name" name="lastName" type="text" class="form__input" placeholder="Doe" data-i18n-placeholder="lastNamePlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="phone" data-i18n="phoneNumber">Phone Number</label>
+                <input id="phone" name="phone" type="tel" class="form__input" placeholder="+1 555 123 4567" data-i18n-placeholder="phonePlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="email" data-i18n="emailAddress">Email Address</label>
+                <input id="email" name="email" type="email" class="form__input" placeholder="john.doe@example.com" data-i18n-placeholder="emailPlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="organization" data-i18n="organization">Organization</label>
+                <input id="organization" name="organization" type="text" class="form__input" placeholder="Company" data-i18n-placeholder="organizationPlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="contact-url" data-i18n="website">Website</label>
+                <input id="contact-url" name="contactUrl" type="url" class="form__input" placeholder="https://example.com" data-i18n-placeholder="websitePlaceholder" />
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="form__group form__group--hidden" data-view="wifi">
+            <fieldset class="form__fieldset">
+              <legend data-i18n="wifiInformation">WiFi</legend>
+              <div class="form__row">
+                <label class="form__label" for="ssid" data-i18n="wifiNetworkName">Network Name (SSID)</label>
+                <input id="ssid" name="ssid" type="text" class="form__input" placeholder="My WiFi" data-i18n-placeholder="networkNamePlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="wifi-password" data-i18n="wifiPassword">Password</label>
+                <input id="wifi-password" name="wifiPassword" type="text" class="form__input" placeholder="••••••••" data-i18n-placeholder="passwordPlaceholder" />
+              </div>
+              <div class="form__row">
+                <label class="form__label" for="wifi-security" data-i18n="wifiSecurity">Security</label>
+                <select id="wifi-security" name="wifiSecurity" class="form__input">
+                  <option value="nopass" data-i18n="wifiOpen">Open</option>
+                  <option value="WPA" selected data-i18n="wifiWpa">WPA/WPA2</option>
+                  <option value="WEP" data-i18n="wifiWep">WEP</option>
+                </select>
+              </div>
+              <label class="form__checkbox">
+                <input type="checkbox" id="wifi-hidden" name="wifiHidden" />
+                <span data-i18n="wifiHidden">Hidden Network</span>
+              </label>
+            </fieldset>
+          </div>
+
+          <button type="button" class="button button--ghost" id="clear-button" data-i18n="clearAllFields">Clear all fields</button>
+        </form>
+
+        <section class="panel panel--nested">
+          <header class="panel__header">
+            <h2 data-i18n="customization">Customization</h2>
+          </header>
+          <div class="panel__content panel__content--grid">
+            <label class="control">
+              <span class="control__label" data-i18n="codeColor">Code Color</span>
+              <input type="color" id="code-color" value="#000000" />
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="backgroundColor">Background</span>
+              <input type="color" id="background-color" value="#ffffff" />
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="cornerSquareColor">Corner Squares</span>
+              <input type="color" id="corner-color" value="#000000" />
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="borderColor">Border</span>
+              <input type="color" id="border-color" value="#000000" />
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="cornerStyle">Corner Style</span>
+              <select id="corner-style">
+                <option value="square" data-i18n="squareCorners">Square</option>
+                <option value="rounded" data-i18n="roundedCorners">Rounded</option>
+              </select>
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="moduleStyle">Module Style</span>
+              <select id="module-style">
+                <option value="square" data-i18n="squareModules">Square</option>
+                <option value="round" data-i18n="roundModules">Round Dots</option>
+              </select>
+            </label>
+            <div class="control control--full">
+              <span class="control__label" data-i18n="centerLogo">Center Logo</span>
+              <div class="control__stack">
+                <input type="file" accept="image/*" id="logo-upload" />
+                <select id="logo-size" disabled>
+                  <option value="small" data-i18n="logoSmall">Small (55px)</option>
+                  <option value="large" data-i18n="logoLarge">Large (79px)</option>
+                </select>
+                <button type="button" class="button button--ghost" id="remove-logo" disabled data-i18n="removeLogo">Remove Logo</button>
+              </div>
+            </div>
+            <label class="control control--full">
+              <span class="control__label" data-i18n="caption">Caption</span>
+              <input type="text" id="caption-text" class="form__input" placeholder="" data-i18n-placeholder="captionPlaceholder" />
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="showCaption">Show Caption</span>
+              <div class="toggle">
+                <input type="checkbox" id="show-caption" />
+              </div>
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="captionSize">Caption Size</span>
+              <select id="caption-size">
+                <option value="normal" data-i18n="captionSmall">Normal</option>
+                <option value="large" data-i18n="captionLarge">Large</option>
+                <option value="xlarge" data-i18n="captionExtraLarge">Extra Large</option>
+              </select>
+            </label>
+            <label class="control">
+              <span class="control__label" data-i18n="captionBold">Bold Caption</span>
+              <div class="toggle">
+                <input type="checkbox" id="caption-bold" />
+              </div>
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel panel--preview">
+        <header class="panel__header">
+          <div>
+            <h2 data-i18n="generatedQrCode">Preview</h2>
+            <p data-i18n="scanQrCode">Scan this code with your phone to test it instantly.</p>
+          </div>
+          <div class="panel__actions">
+            <button type="button" class="button" id="download-png">
+              <span aria-hidden="true">⬇️</span>
+              <span data-i18n="downloadPng">Download PNG</span>
+            </button>
+            <button type="button" class="button button--secondary" id="download-svg">
+              <span aria-hidden="true">⬇️</span>
+              <span data-i18n="downloadSvg">Download SVG</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="preview" id="qr-preview" role="img" aria-live="polite"></div>
+
+        <div class="panel panel--nested">
+          <header class="panel__header">
+            <h3 data-i18n="qrCodeData">QR Code Data</h3>
+            <button type="button" class="button button--ghost" id="copy-data">
+              <span aria-hidden="true">📋</span>
+              <span data-i18n="copyData">Copy Data</span>
+            </button>
+          </header>
+          <pre class="preview__data" id="qr-data" tabindex="0"></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p data-i18n="footerText">Generate QR codes instantly • No data stored • Free to use</p>
+      <nav class="footer__links">
+        <button type="button" class="link" data-modal="terms">Terms of Use</button>
+        <button type="button" class="link" data-modal="privacy">Privacy Policy</button>
+        <button type="button" class="link" data-modal="contact">Contact</button>
+      </nav>
+      <p>© <span id="footer-year"></span> <a href="https://zentopia.io" class="link" target="_blank" rel="noopener">Zentopia Labs</a></p>
+    </footer>
+
+    <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal__backdrop" data-dismiss="modal"></div>
+      <div class="modal__dialog" role="document">
+        <header class="modal__header">
+          <h2 class="modal__title"></h2>
+          <button type="button" class="modal__close" data-dismiss="modal" aria-label="Close">✕</button>
+        </header>
+        <div class="modal__body"></div>
+      </div>
+    </div>
+
+    <script type="module" src="assets/js/main.js"></script>
+  </body>
+</html>
