@@ -136,7 +136,11 @@ class ZentopiaQRGenerator {
 
         // Other input fields - auto generate
         const autoGenFields = ['textInput', 'contactName', 'contactEmail',
-                               'contactPhone', 'contactOrg', 'wifiSsid', 'wifiPassword', 'wifiSecurity'];
+                               'contactPhone', 'contactOrg', 'wifiSsid', 'wifiPassword', 'wifiSecurity',
+                               'emailTo', 'emailSubject', 'emailBody',
+                               'smsPhone', 'smsMessage',
+                               'phoneNumber',
+                               'locationLat', 'locationLng'];
         autoGenFields.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -241,6 +245,46 @@ class ZentopiaQRGenerator {
 
                 // WiFi QR format
                 data = `WIFI:T:${security};S:${ssid};P:${password};;`;
+                break;
+
+            case 'email':
+                const emailTo = document.getElementById('emailTo').value;
+                const emailSubject = document.getElementById('emailSubject').value;
+                const emailBody = document.getElementById('emailBody').value;
+
+                // mailto: format
+                data = `mailto:${emailTo}`;
+                const params = [];
+                if (emailSubject) params.push(`subject=${encodeURIComponent(emailSubject)}`);
+                if (emailBody) params.push(`body=${encodeURIComponent(emailBody)}`);
+                if (params.length > 0) data += `?${params.join('&')}`;
+                break;
+
+            case 'sms':
+                const smsPhone = document.getElementById('smsPhone').value;
+                const smsMessage = document.getElementById('smsMessage').value;
+
+                // SMS format
+                if (smsMessage) {
+                    data = `sms:${smsPhone}?body=${encodeURIComponent(smsMessage)}`;
+                } else {
+                    data = `sms:${smsPhone}`;
+                }
+                break;
+
+            case 'phone':
+                const phoneNumber = document.getElementById('phoneNumber').value;
+
+                // tel: format
+                data = `tel:${phoneNumber}`;
+                break;
+
+            case 'location':
+                const lat = document.getElementById('locationLat').value;
+                const lng = document.getElementById('locationLng').value;
+
+                // geo: format (opens in maps app)
+                data = `geo:${lat},${lng}`;
                 break;
         }
 
