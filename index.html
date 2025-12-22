@@ -95,6 +95,152 @@
             image-rendering: -webkit-crisp-edges;
         }
     </style>
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Free QR Code Generator",
+          "url": "https://qrcode.zentopia.io",
+          "description": "Generate beautiful, customizable QR codes for free. No registration required. Customize colors, add logos, choose sizes. Download as PNG, SVG, or PDF.",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Web Browser",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "Custom QR code colors",
+            "Logo integration",
+            "Multiple export formats (PNG, SVG, PDF)",
+            "No registration required",
+            "Unlimited QR code generation",
+            "High resolution exports"
+          ]
+        },
+        {
+          "@type": "HowTo",
+          "name": "How to Create a QR Code",
+          "description": "Generate professional QR codes in four simple steps",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Choose Type",
+              "text": "Select the QR code type: URL, Text, Contact, WiFi, or more options."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Enter Data",
+              "text": "Fill in your information - website URL, contact details, WiFi credentials, or custom text."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Customize Design",
+              "text": "Personalize colors, shapes, frames, and add your logo. Make it match your brand perfectly."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 4,
+              "name": "Download",
+              "text": "Export in your preferred format: PNG for digital use, SVG for editing, or PDF for printing."
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is a QR code?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "QR (Quick Response) code is a two-dimensional barcode that stores information readable by smartphones and QR scanners. Invented in 1994 by Denso Wave, QR codes can store URLs, text, contact information, WiFi credentials, and much more. They work by encoding data into a pattern of black squares on a white background."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I scan a QR code?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Modern smartphones can scan QR codes natively. On iOS (iPhone), simply open the Camera app and point it at the QR code - a notification will appear with the link. On Android, use the Camera app or Google Lens. No special app is required on most modern devices."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are QR codes free to use?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! QR codes are completely free to create and use. Our generator allows unlimited QR code creation with no registration, no watermarks, and no hidden fees. You can use generated QR codes for both personal and commercial projects without any restrictions."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do QR codes expire?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Static QR codes (like ours) never expire. The information is encoded directly in the code itself, so it will work forever as long as the destination (like a website) remains active. However, if you change your website URL, you'll need to generate a new QR code."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I edit a QR code after creating it?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Static QR codes (like the ones we generate) cannot be edited after creation because the data is permanently encoded. If you need to change the information, you'll need to create a new QR code. For editable QR codes, you would need dynamic QR codes with a redirect service."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What's the difference between static and dynamic QR codes?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Static QR codes contain the actual data (URL, text, etc.) encoded directly - they're permanent and don't require an internet connection to be generated. Dynamic QR codes contain a short URL that redirects to your content, allowing you to change the destination later and track scans, but they require a paid service."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I add a logo to my QR code?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Our generator supports adding custom logos to the center of your QR code. Thanks to QR code error correction, you can cover up to 30% of the code with a logo and it will still scan correctly. For best results, use a simple logo with good contrast."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What colors work best for QR codes?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dark colors on light backgrounds work best. Classic black on white offers the highest contrast and most reliable scanning. Avoid light colors on dark backgrounds, low-contrast combinations, or inverting the QR code (white on black), as these can reduce scan reliability."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use QR codes for commercial purposes?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely! All QR codes generated with our tool are free to use for any purpose, including commercial projects. Use them on products, marketing materials, business cards, packaging, websites, or anywhere else. No attribution required, no restrictions."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I track QR code scans?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "For static QR codes, create a unique tracking URL using services like Google Analytics UTM parameters (e.g., yoursite.com?utm_source=qr_code). This lets you track scans in your analytics dashboard. For advanced tracking with scan locations and device info, you'd need dynamic QR codes with a paid service."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 </head>
 <body class="bg-gray-50">
 
@@ -161,6 +307,123 @@
                     <div class="bg-white p-8 rounded-2xl shadow-2xl animate-fade-in">
                         <canvas id="heroQrCanvas" width="300" height="300" class="w-full max-w-xs mx-auto" alt="Example QR code preview"></canvas>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why QR Codes Section -->
+    <section class="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Use QR Codes?</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    QR codes bridge the gap between physical and digital worlds, offering instant access to information with a simple scan.
+                    From marketing campaigns to contactless payments, QR codes have become an essential tool for businesses and individuals worldwide.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-cyan-100">
+                                <svg class="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Contactless Interaction</h3>
+                    </div>
+                    <p class="text-gray-600">
+                        Enable touchless information sharing and transactions. Perfect for health-conscious environments and modern customer experiences.
+                    </p>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100">
+                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Instant Access</h3>
+                    </div>
+                    <p class="text-gray-600">
+                        Users get immediate access to websites, contact info, or documents with a single scan. No typing, no searching, no friction.
+                    </p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-pink-100">
+                                <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Track & Analyze</h3>
+                    </div>
+                    <p class="text-gray-600">
+                        Monitor scan rates, locations, and user behavior. Gain valuable insights to optimize your marketing campaigns and content.
+                    </p>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-100">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Cost-Effective</h3>
+                    </div>
+                    <p class="text-gray-600">
+                        Generate unlimited QR codes for free. No printing costs for URLs, no expensive NFC tags. Print once, update content anytime.
+                    </p>
+                </div>
+
+                <!-- Benefit 5 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Eco-Friendly</h3>
+                    </div>
+                    <p class="text-gray-600">
+                        Reduce paper waste by replacing printed materials with digital content. One QR code can replace hundreds of paper handouts.
+                    </p>
+                </div>
+
+                <!-- Benefit 6 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100">
+                                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Universal Compatibility</h3>
+                    </div>
+                    <p class="text-gray-600">
+                        Works on all smartphones with cameras. No special app required. iOS and Android devices can scan QR codes natively.
+                    </p>
                 </div>
             </div>
         </div>
@@ -555,6 +818,581 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-2">High Quality</h3>
                     <p class="text-gray-600">Print-ready resolution up to 900x900px for professional results</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="py-16 md:py-20 bg-gradient-to-br from-cyan-50 to-purple-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">QR Code Use Cases</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    From business cards to product packaging, QR codes enable countless applications across industries. Discover how QR codes can transform your business or project.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Use Case 1: Marketing & Advertising -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">📢</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Marketing & Advertising</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-cyan-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Product packaging → product details & reviews</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-cyan-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Posters & billboards → event registration</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-cyan-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Business cards → digital vCard & portfolio</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 2: Restaurants & Hospitality -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">🍽️</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Restaurants & Hospitality</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Contactless digital menus</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Table ordering & payment links</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Customer feedback & reviews</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 3: Retail & E-commerce -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">🛍️</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Retail & E-commerce</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-pink-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Product authentication & verification</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-pink-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Special offers & discount coupons</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-pink-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>App download links & loyalty programs</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 4: Events & Ticketing -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">🎫</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Events & Ticketing</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Digital tickets & entry passes</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Session check-ins & attendance tracking</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Networking & digital business cards</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 5: Education -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">📚</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Education</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Course materials & online resources</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Student attendance & class check-in</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Library books & digital catalogs</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 6: Real Estate -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">🏠</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Real Estate</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-indigo-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Property listings & details</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-indigo-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Virtual tours & 3D walkthroughs</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-indigo-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Contact forms & viewing bookings</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 7: Healthcare -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">⚕️</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Healthcare</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Patient record access & medical history</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Prescription information & instructions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Appointment booking & reminders</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 8: Manufacturing & Logistics -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">📦</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Manufacturing & Logistics</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Inventory management & tracking</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Shipment tracking & delivery updates</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Equipment manuals & maintenance logs</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Use Case 9: Authentication & Security -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">🔐</span>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-900">Authentication & Security</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-gray-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Product authentication & anti-counterfeiting</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-gray-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Two-factor authentication (2FA)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-gray-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Certificate & credential verification</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-16 md:py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How to Create a QR Code</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Generate professional QR codes in four simple steps. No technical knowledge required.
+                </p>
+            </div>
+
+            <div class="relative">
+                <!-- Connection Line (desktop) -->
+                <div class="hidden lg:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500" style="width: calc(100% - 200px); margin-left: 100px;"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Step 1 -->
+                    <div class="relative text-center">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl relative z-10">
+                                1
+                            </div>
+                            <div class="absolute inset-0 bg-cyan-400 rounded-full blur-xl opacity-50"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Choose Type</h3>
+                        <p class="text-gray-600">
+                            Select the QR code type: URL, Text, Contact, WiFi, or more options coming soon.
+                        </p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative text-center">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl relative z-10">
+                                2
+                            </div>
+                            <div class="absolute inset-0 bg-purple-400 rounded-full blur-xl opacity-50"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Enter Data</h3>
+                        <p class="text-gray-600">
+                            Fill in your information - website URL, contact details, WiFi credentials, or custom text.
+                        </p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative text-center">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl relative z-10">
+                                3
+                            </div>
+                            <div class="absolute inset-0 bg-pink-400 rounded-full blur-xl opacity-50"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Customize Design</h3>
+                        <p class="text-gray-600">
+                            Personalize colors, shapes, frames, and add your logo. Make it match your brand perfectly.
+                        </p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative text-center">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl relative z-10">
+                                4
+                            </div>
+                            <div class="absolute inset-0 bg-green-400 rounded-full blur-xl opacity-50"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Download</h3>
+                        <p class="text-gray-600">
+                            Export in your preferred format: PNG for digital use, SVG for editing, or PDF for printing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center mt-12">
+                <a href="#generator" class="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    Start Creating Now →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                <p class="text-lg text-gray-600">
+                    Everything you need to know about QR codes and our generator
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">What is a QR code?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        QR (Quick Response) code is a two-dimensional barcode that stores information readable by smartphones and QR scanners. Invented in 1994 by Denso Wave, QR codes can store URLs, text, contact information, WiFi credentials, and much more. They work by encoding data into a pattern of black squares on a white background.
+                    </div>
+                </details>
+
+                <!-- FAQ 2 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">How do I scan a QR code?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Modern smartphones can scan QR codes natively. On iOS (iPhone), simply open the Camera app and point it at the QR code - a notification will appear with the link. On Android, use the Camera app or Google Lens. No special app is required on most modern devices.
+                    </div>
+                </details>
+
+                <!-- FAQ 3 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Are QR codes free to use?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Yes! QR codes are completely free to create and use. Our generator allows unlimited QR code creation with no registration, no watermarks, and no hidden fees. You can use generated QR codes for both personal and commercial projects without any restrictions.
+                    </div>
+                </details>
+
+                <!-- FAQ 4 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Do QR codes expire?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Static QR codes (like ours) never expire. The information is encoded directly in the code itself, so it will work forever as long as the destination (like a website) remains active. However, if you change your website URL, you'll need to generate a new QR code.
+                    </div>
+                </details>
+
+                <!-- FAQ 5 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Can I edit a QR code after creating it?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Static QR codes (like the ones we generate) cannot be edited after creation because the data is permanently encoded. If you need to change the information, you'll need to create a new QR code. For editable QR codes, you would need dynamic QR codes with a redirect service.
+                    </div>
+                </details>
+
+                <!-- FAQ 6 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">What's the difference between static and dynamic QR codes?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Static QR codes contain the actual data (URL, text, etc.) encoded directly - they're permanent and don't require an internet connection to be generated. Dynamic QR codes contain a short URL that redirects to your content, allowing you to change the destination later and track scans, but they require a paid service.
+                    </div>
+                </details>
+
+                <!-- FAQ 7 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">What file format should I use?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Use PNG for digital use (websites, emails, presentations), SVG for editing in design software and infinite scalability, and PDF for professional printing. PNG is the most universal format and works everywhere.
+                    </div>
+                </details>
+
+                <!-- FAQ 8 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">What size should my QR code be?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        For printing, QR codes should be at least 2×2 cm (0.8×0.8 inches) to ensure reliable scanning. For business cards, 2.5×2.5 cm works well. For posters and billboards, make them proportionally larger - a good rule is that the QR code should be scannable from the viewing distance divided by 10.
+                    </div>
+                </details>
+
+                <!-- FAQ 9 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">How much data can a QR code hold?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        A QR code can store up to 4,296 alphanumeric characters, 7,089 numeric characters, or 2,953 bytes of binary data. However, more data means a more complex code that's harder to scan. For best results, keep URLs under 200 characters and text under 500 characters.
+                    </div>
+                </details>
+
+                <!-- FAQ 10 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Can I use a QR code offline?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Yes! QR codes containing plain text, WiFi credentials, or contact information (vCard) work completely offline. However, QR codes linking to websites require an internet connection to access the destination content after scanning.
+                    </div>
+                </details>
+
+                <!-- FAQ 11 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Can I add a logo to my QR code?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Yes! Our generator supports adding custom logos to the center of your QR code. Thanks to QR code error correction, you can cover up to 30% of the code with a logo and it will still scan correctly. For best results, use a simple logo with good contrast.
+                    </div>
+                </details>
+
+                <!-- FAQ 12 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Will my custom QR code still scan?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Yes! As long as you maintain sufficient contrast between the foreground and background colors, and don't over-customize the corner elements, your QR code will scan perfectly. We recommend testing your QR code with multiple devices before printing in large quantities.
+                    </div>
+                </details>
+
+                <!-- FAQ 13 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">What colors work best for QR codes?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Dark colors on light backgrounds work best. Classic black on white offers the highest contrast and most reliable scanning. Avoid light colors on dark backgrounds, low-contrast combinations, or inverting the QR code (white on black), as these can reduce scan reliability.
+                    </div>
+                </details>
+
+                <!-- FAQ 14 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">Can I use QR codes for commercial purposes?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        Absolutely! All QR codes generated with our tool are free to use for any purpose, including commercial projects. Use them on products, marketing materials, business cards, packaging, websites, or anywhere else. No attribution required, no restrictions.
+                    </div>
+                </details>
+
+                <!-- FAQ 15 -->
+                <details class="group bg-white rounded-xl shadow-md overflow-hidden">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <h3 class="text-lg font-semibold text-gray-900">How can I track QR code scans?</h3>
+                        <svg class="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600">
+                        For static QR codes, create a unique tracking URL using services like Google Analytics UTM parameters (e.g., yoursite.com?utm_source=qr_code). This lets you track scans in your analytics dashboard. For advanced tracking with scan locations and device info, you'd need dynamic QR codes with a paid service.
+                    </div>
+                </details>
             </div>
         </div>
     </section>
